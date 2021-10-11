@@ -1,0 +1,2 @@
+En la carpeta de navigator, por lo general es donde se crea el componente encargado de la navegación entre pantallas,
+me gusta crearle una carpeta, porque habrá pantallas que contengan navegadores dentro, todo dependerá de la estructura que se le de.

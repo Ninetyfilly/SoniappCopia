@@ -1,0 +1,1 @@
+Y aquí ya van las vistas de la aplicaciones, como podrían ser el login, registro, dashboard, los cruds, y cualquier vista a pantalla completa que el usuario vea
