@@ -10,7 +10,7 @@ const ProfileScreen=({navigation})=>{
                     navigation.navigate('HomeScreen')
                 }}></Button>
                 <Button title={"Cerrar sesion"} onPress={()=>{
-                    navigation.navigate('RegisterScreen')
+                    navigation.navigate('LoginScreen')
                 }}></Button>
             </View>
         );
