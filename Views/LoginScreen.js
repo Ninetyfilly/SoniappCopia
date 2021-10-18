@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   textoLogin:{
         color: '#ffffff',
         fontFamily: ('Poppins', 'sans-serif'),
-        borderRadius: 4,
+        borderRadius: 10,
         alignSelf: "center",
         minWidth: "20%",
         paddingVertical: 5,
