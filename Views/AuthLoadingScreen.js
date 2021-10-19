@@ -25,7 +25,7 @@ const AuthLoadingScreen=({navigation})=>{
 
     return(
         <View>
-            <Text>hola {user} AAAAAAAAAAA</Text>
+            <Text></Text>
         </View>
     );
 }

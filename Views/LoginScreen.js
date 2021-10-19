@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Button,StyleSheet,TextInput,TouchableOpacity, Image} from 'react-native';
+import {Text, View,StyleSheet,StatusBar,TextInput,TouchableOpacity,Platform, Image, KeyboardAvoidingView,Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import imageSoni from '../assets/SONIAPP.png'
 import imageVer from '../assets/ojoVer.png'
@@ -8,15 +8,18 @@ import imageOcultar from '../assets/ojoOculto.png'
 const LoginScreen=({navigation})=>{
 
     const [user, setUser] = React.useState('');
+    const [password, setPassword] = React.useState('');
     const [shown, setShown] = React.useState(false);
     const [ojo, setOjo] = React.useState(false);
 
-    _Login=async () =>{
-        try{
-            await AsyncStorage.setItem('user', user);
-            navigation.navigate('HomeScreen');
-        } catch(e){ }
-        
+    
+
+    _Login= () =>{
+        if(user == ''){
+            Alert.alert('Por favor, ingresa tu usuario')
+        }else if(password == ''){
+            Alert.alert('Por favor, ingresa tu Contraseña')
+        }
     }
 
     const mostrarContraseña = () =>setShown(!shown);
@@ -27,27 +30,30 @@ const LoginScreen=({navigation})=>{
     };
 
     return(
-        
-        <View style={styles.view}>
-            <View style={styles.soniapp}>
-                <Image source={imageSoni} style={styles.imageSonia}/>
-            </View>
-            <View style={styles.form}>
-                <TextInput placeholder={'Ingresa tu correo'} onChangeText={setUser}/>
-            </View>
-            <View style={styles.row}>
-                <TextInput placeholder={'Ingresa tu Contraseña'} style={{marginRight: 10}} secureTextEntry={shown ? false : true} />
-                <TouchableOpacity onPress={funcionesContraseña}>
-                    <Image source={ojo ? imageVer : imageOcultar} style={styles.imageOjito}/>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined } style={{flex:1}}>
+            <StatusBar barStyle='light-content'/>
+            <View style={styles.view}>
+                <View style={styles.soniapp}>
+                    <Image source={imageSoni} style={styles.imageSonia}/>
+                </View>
+                <View style={styles.form}>
+                    <TextInput placeholder={' Ingresa tu correo'} style={styles.textoUsuario} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setUser}/>
+                </View>
+                <View style={styles.textoPassword}>
+                    <TextInput placeholder={'Ingresa tu Contraseña'} placeholderTextColor={'black'} 
+                        style={{marginRight: 20,}} secureTextEntry={shown ? false : true} onChangeText={setPassword}/>
+                    <TouchableOpacity onPress={funcionesContraseña}>
+                        <Image source={ojo ? imageVer : imageOcultar} style={styles.imageOjito}/>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity style={styles.bottonRecuperar} onPress={()=>{navigation.navigate('RegisterScreen')}}>
+                    <Text style={{color: '#3446EA',}}> Olvide mi Contraseña </Text>
+                </TouchableOpacity>
+                <TouchableOpacity  style={styles.bottonLogin} onPress={()=>{_Login()}}>
+                    <Text style={styles.textoBotonLogin}>       Login </Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.bottonRecuperar} onPress={()=>{navigation.navigate('RegisterScreen')}}>
-                <Text> Olvide mi Contraseña </Text>
-            </TouchableOpacity>
-            <TouchableOpacity  style={styles.bottonLogin} onPress={()=>{_Login()}}>
-                <Text style={styles.textoLogin}>       Login </Text>
-            </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
         );
 }
 export default LoginScreen;
@@ -73,7 +79,7 @@ const styles = StyleSheet.create({
        flex: 2,
        marginBottom: 20,
        alignItems: 'center',
-       justifyContent: 'flex-end',
+       justifyContent: 'space-around',
    },
    row: {
     flex: 1,
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 20,
   },
-  textoLogin:{
+  textoBotonLogin:{
         color: '#ffffff',
         fontFamily: ('Poppins', 'sans-serif'),
         borderRadius: 10,
@@ -93,6 +99,33 @@ const styles = StyleSheet.create({
         backgroundColor: '#00b7b8', 
         height: 40,
         width: 50,
+  },
+  textoUsuario:{
+        color: '#000000',
+        fontFamily: ('Poppins', 'sans-serif'),
+        borderRadius: 10,
+        alignItems: 'center',
+        alignSelf: "center",
+        minWidth: "50%",
+        paddingVertical: 5,
+        backgroundColor: '#ffffff', 
+        marginRight: 10,
+        borderWidth: 1,
+  },
+  textoPassword:{
+        flex: 0,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: 'center',
+        color: '#000000',
+        fontFamily: ('Poppins', 'sans-serif'),
+        borderRadius: 10,
+        alignSelf: "center",
+        minWidth: "50%",
+        paddingVertical: 5,
+        backgroundColor: '#ffffff', 
+        marginRight: 10,
+        borderWidth: 1,
   },
   bottonLogin:{
         flex: 4,
