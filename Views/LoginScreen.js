@@ -12,13 +12,43 @@ const LoginScreen=({navigation})=>{
     const [shown, setShown] = React.useState(false);
     const [ojo, setOjo] = React.useState(false);
 
-    
+
+
+    _signIn =async(token) =>{
+        try {
+            await AsyncStorage.setItem('userToken',token);
+            navigation.navigate('HomeScreen')            
+        } catch (error) {
+            Alert.alert("ERROOOOOOOOOOR")
+        }
+
+    }
 
     _Login= () =>{
         if(user == ''){
             Alert.alert('Por favor, ingresa tu usuario')
         }else if(password == ''){
             Alert.alert('Por favor, ingresa tu Contraseña')
+        }else{
+            fetch('http://192.168.1.5:4000/api/authenticate',{
+                method: 'POST',
+                headers:{
+                    Accept:'application/json',
+                        'Content-Type':'application/json'
+                },
+                Body: JSON.stringify({
+                    name: user,
+                    password: password,
+                }),
+            }).then((response) => response.json())
+            .then((responseJson) =>{
+                if(responseJson.hasOwnProperty('token')){
+                    Alert.alert(responseJson.token);
+                    _signIn(responseJson.token);
+                }else{
+                    Alert.alert('Error', 'Ha ocurrido un error, Intente de nuevo');
+                }
+            });
         }
     }
 
@@ -37,11 +67,11 @@ const LoginScreen=({navigation})=>{
                     <Image source={imageSoni} style={styles.imageSonia}/>
                 </View>
                 <View style={styles.form}>
-                    <TextInput placeholder={' Ingresa tu correo'} style={styles.textoUsuario} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setUser}/>
+                    <TextInput placeholder={'Ingresa tu correo'} style={styles.textoUsuario} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setUser}/>
                 </View>
                 <View style={styles.textoPassword}>
                     <TextInput placeholder={'Ingresa tu Contraseña'} placeholderTextColor={'black'} 
-                        style={{marginRight: 20,}} secureTextEntry={shown ? false : true} onChangeText={setPassword}/>
+                        style={{marginRight: 20,}} secureTextEntry={shown ? false : true} onChangeText={setPassword} autoCapitalize='none' />
                     <TouchableOpacity onPress={funcionesContraseña}>
                         <Image source={ojo ? imageVer : imageOcultar} style={styles.imageOjito}/>
                     </TouchableOpacity>
@@ -108,6 +138,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         minWidth: "50%",
         paddingVertical: 5,
+        paddingHorizontal: 6,
         backgroundColor: '#ffffff', 
         marginRight: 10,
         borderWidth: 1,
@@ -123,6 +154,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         minWidth: "50%",
         paddingVertical: 5,
+        paddingHorizontal: 5,
         backgroundColor: '#ffffff', 
         marginRight: 10,
         borderWidth: 1,

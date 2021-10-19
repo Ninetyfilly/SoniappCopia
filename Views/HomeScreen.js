@@ -14,10 +14,9 @@ const HomeScreen=({navigation})=>{
   }
   _getUser();
 
-  _deleteUser=async()=>{
+  _deleteToken=async()=>{
     try{
-      await AsyncStorage.removeItem('user',(err) => console.log('user', err));
-      setUser('user');
+      await AsyncStorage.removeItem('userToken');
       navigation.navigate('AuthLoadingScreen'); 
       } catch(e){}
   }
@@ -27,7 +26,7 @@ const HomeScreen=({navigation})=>{
         <View style={styles.view}>
         <Text>Hola {user} bienvenido </Text>
         <Button title={"Perfil"} onPress={()=>{navigation.navigate('ProfileScreen')}}></Button>
-        <Button title={"Cerrar Sesion"} onPress={()=>{_deleteUser();}}></Button>
+        <Button title={"Cerrar Sesion"} onPress={()=>{_deleteToken()}}></Button>
         </View>
   );
   console.log(user);
