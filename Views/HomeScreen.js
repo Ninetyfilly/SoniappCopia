@@ -21,12 +21,16 @@ const HomeScreen=({navigation})=>{
       } catch(e){}
   }
 
+  _calendario=()=>{
+    navigation.navigate('CalendarioScreen');
+  }
 
   return (
         <View style={styles.view}>
         <Text>Hola {user} bienvenido </Text>
         <Button title={"Perfil"} onPress={()=>{navigation.navigate('ProfileScreen')}}></Button>
         <Button title={"Cerrar Sesion"} onPress={()=>{_deleteToken()}}></Button>
+        <Button title={"Calendario"} onPress={()=>{_calendario()}}></Button>
         </View>
   );
   console.log(user);
