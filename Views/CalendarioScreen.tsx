@@ -1,34 +1,40 @@
 import React, {useState} from 'react';
-import {View,StyleSheet, TouchableOpacity,Text} from 'react-native';
+import {View,StyleSheet, TouchableOpacity,Text,Alert} from 'react-native';
 import { Agenda} from 'react-native-calendars';
-import { Card, Paragraph, Avatar } from 'react-native-paper';
+import { Card, Paragraph, Avatar,Button} from 'react-native-paper';
+const moment = require('moment');
 
 const CalendarioScreen:React.FC = () =>{
 
     const [item, setItems] = useState({})
+    const [marcas, setMarcas] = useState({})
+    const [Dias, setDias] = useState({})
 
     const loadItems = (day) => {
-        setTimeout(() => {
-        for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = timeToString(time);
-        if (!item[strTime]) {
-          item[strTime] = [];
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            item[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
+          for (let i = 0; i < 13; i++) {
+            const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+            const strTime = timeToString(time);
+            if (!item[strTime]) {
+              item[strTime] = [];
+              const numItems = Math.floor(Math.random() * 3 + 1);
+              let letras = ["M","R","ME"];
+              let colores = ["black","red","green"];
+              let Tema = ["Mentoria","Revision","Mentoria externa"];
+              for (let j = 0; j < numItems; j++) { //en este ciclo se agregan los atributos que llevara la agenda por dia
+                item[strTime].push({
+                  name: strTime + '\n '+ Tema[j] + ' sobre *****', //ya sea su nombre, letra o lo que se requiera
+                  height: Math.max(50, Math.floor(Math.random() * 150)), 
+                  label: letras[j],
+                  selectedDotColor: colores[j],
+                });
+              }
+            }
           }
-        }
-      }
-      const newItems = {};
-      Object.keys(item).forEach(key => {
-        newItems[key] = item[key];
-      });
-        setItems(newItems);
-    }, 1000);
+          const newItems = {};
+          Object.keys(item).forEach(key => {
+            newItems[key] = item[key];
+          });
+          setItems(newItems);
     }
 
     const timeToString = (time) => {
@@ -36,14 +42,21 @@ const CalendarioScreen:React.FC = () =>{
         return date.toISOString().split('T')[0];
     };
 
+    const generarAgenda=()=>{
+
+
+
+    }    
+
+
     const renderItem = (item) =>{
         return(
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={()=>{Alert.alert("Oh, oprimiste el botón" + fechaActual())}}>
                 <Card>
                     <Card.Content>
                         <View style={styles.agendado}>
-                              <Paragraph>{item.name}</Paragraph>
-                            <Avatar.Text label="J"/>
+                            <Paragraph>{item.name}</Paragraph>
+                            <Avatar.Text label={item.label} style={ item.label == 'M' ? styles.Mentoria : item.label == "R" ? styles.Revision : styles.MentoriaExterna}/>
                         </View>
                     </Card.Content>
                 </Card>
@@ -52,33 +65,61 @@ const CalendarioScreen:React.FC = () =>{
 
     }
 
+    const fechaActual =() =>{ //este metodo regresa el dia actual
+      let now = moment().format('L');
+      console.log(now);
+      return now;
+    }
 
-    return(
-        <View style={styles.view}>
-            <Agenda
-                items={item}
-                loadItemsForMonth={loadItems}
-                selected={'2021-10-20'}
-                renderItem={renderItem}
-                //renderEmptyDate={this.renderEmptyDate.bind(this)}
-                //rowHasChanged={this.rowHasChanged.bind(this)}
-                //showClosingKnob={true}
-                // markingType={'period'}
-                // markedDates={{
-                //    '2017-05-08': {textColor: '#43515c'},
-                //    '2017-05-09': {textColor: '#43515c'},
-                //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-                //    '2017-05-21': {startingDay: true, color: 'blue'},
-                //    '2017-05-22': {endingDay: true, color: 'gray'},
-                //    '2017-05-24': {startingDay: true, color: 'gray'},
-                //    '2017-05-25': {color: 'gray'},
-                //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-                // monthFormat={'yyyy'}
-                //theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-                //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
-                // hideExtraDays={false}
-                />
-            </View>
+    const renderEmptyDate=()=> {
+    return (
+      <Card>
+        <Card.Content>
+          <View style={styles.agendado}>
+            <Paragraph>Esto esta vacio, demasiado vacio</Paragraph>
+          </View>
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  const marcasDiarias =()=>{
+    const vacation = {key: 'metoria', color: 'red', selectedDotColor: 'blue'};
+    //const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
+    //const workout = {key: 'workout', color: 'green'};
+
+    for (let i = -15; i < 85; i++) {
+            const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+            const strTime = timeToString(time);
+            if (!marcas[strTime]) {
+                marcas[strTime] = [];
+                marcas[strTime].push({
+                  dots: [vacation], 
+                  selectedColor: 'white'
+                });
+            }
+          }
+  } 
+
+  return(
+      <View style={styles.view}>
+          <View style={{flexDirection: "row"}}>
+          <Button icon="circle" color="red">Mentoria</Button>
+          <Button icon="circle" color="black">Revision</Button>
+          <Button icon="circle" color="green">Mentoria ext</Button>
+          </View>
+          <Agenda
+              items={item}//aqui se asignan los items
+              loadItemsForMonth={loadItems}//aqui se generan los datos de los items
+              //selected={fechaActual}//Fecha seleccionada por defecto
+              renderItem={renderItem}//aqui se renderizan los items que pertenecen al dia a dia
+              minDate={fechaActual} //Aqui se declara el dia minimo para ser seleccionado
+              //maxDate={fechaActual}
+              renderEmptyDate={renderEmptyDate}
+              //markingType={'multi-dot'}
+              //markedDates={marcas}
+            />
+     </View>
     );
 }
 
@@ -106,5 +147,14 @@ const styles = StyleSheet.create({
   view:{
       flex: 1,
       marginTop: 50
+  },
+  Mentoria:{
+    backgroundColor: "red",
+  },
+  Revision:{
+    backgroundColor: "black",
+  },
+  MentoriaExterna:{
+    backgroundColor: "green",
   }
 });
