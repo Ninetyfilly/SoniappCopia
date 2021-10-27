@@ -59,13 +59,10 @@ const LoginScreen=({navigation})=>{
         mostrarOjo();
     };
 
-<<<<<<< HEAD
-=======
     _Recuperar=()=>{
         navigation.navigate('RecuperarScreen')
     }
 
->>>>>>> dev
     return(
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined } style={{flex:1}}>
             <StatusBar barStyle='light-content'/>
@@ -83,11 +80,7 @@ const LoginScreen=({navigation})=>{
                         <Image source={ojo ? imageVer : imageOcultar} style={styles.imageOjito}/>
                     </TouchableOpacity>
                 </View>
-<<<<<<< HEAD
-                <TouchableOpacity style={styles.bottonRecuperar} onPress={()=>{navigation.navigate('RegisterScreen')}}>
-=======
                 <TouchableOpacity style={styles.bottonRecuperar} onPress={()=>{_Recuperar()}}>
->>>>>>> dev
                     <Text style={{color: '#3446EA',}}> Olvide mi Contraseña </Text>
                 </TouchableOpacity>
                 <TouchableOpacity  style={styles.bottonLogin} onPress={()=>{_Login()}}>
