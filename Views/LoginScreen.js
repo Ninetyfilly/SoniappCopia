@@ -24,20 +24,20 @@ const LoginScreen=({navigation})=>{
 
     }
 
-    _Login= () =>{
+    _Login= async () =>{
         if(user == ''){
             Alert.alert('Por favor, ingresa tu usuario')
         }else if(password == ''){
             Alert.alert('Por favor, ingresa tu Contraseña')
         }else{
-            fetch('http://192.168.1.5:4000/api/authenticate',{
+            await fetch('https://api.soniapp.hackademy.lat/users/loginmovil/',{
                 method: 'POST',
                 headers:{
-                    Accept:'application/json',
-                        'Content-Type':'application/json'
+                    Accept: 'application/json',
+                    'Content-Type':'application/json'
                 },
-                Body: JSON.stringify({
-                    name: user,
+                body: JSON.stringify({
+                    email: user,
                     password: password,
                 }),
             }).then((response) => response.json())
@@ -45,8 +45,8 @@ const LoginScreen=({navigation})=>{
                 if(responseJson.hasOwnProperty('token')){
                     Alert.alert(responseJson.token);
                     _signIn(responseJson.token);
-                }else{
-                    Alert.alert('Error', 'Ha ocurrido un error, Intente de nuevo');
+                }else if(responseJson.hasOwnProperty('error')){
+                    Alert.alert('Error', 'usuario o contraseña incorrectos');
                 }
             });
         }

@@ -19,7 +19,7 @@ const AuthLoadingScreen=({navigation})=>{
 
     _signIn=async ()=>{
         const userToken =await AsyncStorage.getItem('userToken')
-        _verifyToken(userToken);
+        //_verifyToken(userToken);
         if(userToken != null){
             _refreshToken(userToken);
         }
