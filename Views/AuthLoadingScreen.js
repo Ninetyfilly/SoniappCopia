@@ -20,9 +20,9 @@ const AuthLoadingScreen=({navigation})=>{
     _signIn=async ()=>{
         const userToken =await AsyncStorage.getItem('userToken')
         //_verifyToken(userToken);
-        if(userToken != null){
-            _refreshToken(userToken);
-        }
+        //if(userToken != null){
+           // _refreshToken(userToken);
+        //}
         navigation.navigate(userToken? 'HomeScreen': 'LoginScreen')
     }
 
@@ -33,7 +33,7 @@ const AuthLoadingScreen=({navigation})=>{
                     Accept:'application/json',
                         'Content-Type':'application/json'
                 },
-                Body: JSON.stringify({
+                body: JSON.stringify({
                     token: userToken,
                 }),
             }).then((response) => response.json())
@@ -45,20 +45,19 @@ const AuthLoadingScreen=({navigation})=>{
     }
 
     _refreshToken=(userToken)=>{
-        fetch('http://192.168.1.5:4000/api/token-verify',{
+        fetch('https://api.soniapp.hackademy.lat/users/tokenrefresh/',{
                 method: 'POST',
                 headers:{
                     Accept:'application/json',
                         'Content-Type':'application/json'
                 },
-                Body: JSON.stringify({
+                body: JSON.stringify({
                     token: userToken,
                 }),
             }).then((response) => response.json())
             .then((responseJson) =>{
                 if(responseJson.hasOwnProperty('token')){
                     _replaceTokenStorage(responseJson.token);
-                    Alert.alert((responseJson.token));
                 }else{
                     AsyncStorage.removeItem(userToken);
                 }

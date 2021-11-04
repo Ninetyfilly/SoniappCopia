@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Text, View,StyleSheet,StatusBar,TextInput,TouchableOpacity,Platform, Image, KeyboardAvoidingView,Alert} from 'react-native';
+import {Text, View,StyleSheet,StatusBar,TextInput,TouchableOpacity,Platform, Image, KeyboardAvoidingView,Alert, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import imageSoni from '../assets/SONIAPP.png'
 import imageVer from '../assets/ojoVer.png'
 import imageOcultar from '../assets/ojoOculto.png'
+import {Button} from 'react-native-paper';
 
 const LoginScreen=({navigation})=>{
 
@@ -12,6 +13,8 @@ const LoginScreen=({navigation})=>{
     const [shown, setShown] = React.useState(false);
     const [ojo, setOjo] = React.useState(false);
 
+    const image = { uri: "https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png" };
+
 
 
     _signIn =async(token) =>{
@@ -19,7 +22,7 @@ const LoginScreen=({navigation})=>{
             await AsyncStorage.setItem('userToken',token);
             navigation.navigate('HomeScreen')            
         } catch (error) {
-            Alert.alert("ERROOOOOOOOOOR")
+            Alert.alert("ERROOOOOOOOOOR en logiiin")
         }
 
     }
@@ -43,7 +46,6 @@ const LoginScreen=({navigation})=>{
             }).then((response) => response.json())
             .then((responseJson) =>{
                 if(responseJson.hasOwnProperty('token')){
-                    Alert.alert(responseJson.token);
                     _signIn(responseJson.token);
                 }else if(responseJson.hasOwnProperty('error')){
                     Alert.alert('Error', 'usuario o contraseña incorrectos');
@@ -68,7 +70,9 @@ const LoginScreen=({navigation})=>{
             <StatusBar barStyle='light-content'/>
             <View style={styles.view}>
                 <View style={styles.soniapp}>
+                    <ImageBackground source={image} style={styles.imageHackademy} resizeMode="cover">
                     <Image source={imageSoni} style={styles.imageSonia}/>
+                    </ImageBackground>
                 </View>
                 <View style={styles.form}>
                     <TextInput placeholder={'Ingresa tu correo'} style={styles.textoUsuario} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setUser}/>
@@ -77,7 +81,7 @@ const LoginScreen=({navigation})=>{
                     <TextInput placeholder={'Ingresa tu Contraseña'} placeholderTextColor={'black'} 
                         style={{marginRight: 20,}} secureTextEntry={shown ? false : true} onChangeText={setPassword} autoCapitalize='none' />
                     <TouchableOpacity onPress={funcionesContraseña}>
-                        <Image source={ojo ? imageVer : imageOcultar} style={styles.imageOjito}/>
+                        <Button icon={ojo ? "eye" : "eye-off"} color="black" style={styles.ojoStyle}/>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.bottonRecuperar} onPress={()=>{_Recuperar()}}>
@@ -95,17 +99,24 @@ const styles = StyleSheet.create({
     imageSonia:{
         height: 200,
         width: 250,
+        marginLeft: 5,
     },
-    imageOjito:{
-        height: 30,
-        width: 30,
+    imageHackademy:{
+        flex: 1,
+        justifyContent: "center",
+        height: 250,
+        width: 250,
+    },
+    ojoStyle:{
+        flex:1, 
+        transform: [{ scale: 1.5 },{ translateX: 20 },{ translateY: -4 }],
     },
     view:{
         flex: 1,
         justifyContent: 'center',
     },
     soniapp:{
-        flex:4,
+        flex:5,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -140,7 +151,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         alignSelf: "center",
-        minWidth: "50%",
+        minWidth: "55%",
         paddingVertical: 5,
         paddingHorizontal: 6,
         backgroundColor: '#ffffff', 

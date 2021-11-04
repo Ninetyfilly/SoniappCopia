@@ -56,7 +56,7 @@ const CalendarioScreen:React.FC = () =>{
                     <Card.Content>
                         <View style={styles.agendado}>
                             <Paragraph>{item.name}</Paragraph>
-                            <Avatar.Text label={item.label} style={ item.label == 'M' ? styles.Mentoria : item.label == "R" ? styles.Revision : styles.MentoriaExterna}/>
+                            <Avatar.Text label={item.label} style={ item.label == 'M' ? styles.mentoria : item.label == "R" ? styles.revision : styles.mentoriaExterna}/>
                         </View>
                     </Card.Content>
                 </Card>
@@ -83,7 +83,7 @@ const CalendarioScreen:React.FC = () =>{
     );
   }
 
-  const marcasDiarias =()=>{
+ /* const marcasDiarias =()=>{
     const vacation = {key: 'metoria', color: 'red', selectedDotColor: 'blue'};
     //const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
     //const workout = {key: 'workout', color: 'green'};
@@ -94,13 +94,14 @@ const CalendarioScreen:React.FC = () =>{
             if (!marcas[strTime]) {
                 marcas[strTime] = [];
                 marcas[strTime].push({
-                  dots: [vacation], 
-                  selectedColor: 'white'
+
                 });
             }
           }
-  } 
-
+  } */
+const mentoria = {key: 'mentoria', color: 'red'};
+const revision = {key: 'revision', color: 'black'};
+const mentoriaExt = {key: 'mentoriaExt', color: 'green'};
   return(
       <View style={styles.view}>
           <View style={{flexDirection: "row"}}>
@@ -116,8 +117,14 @@ const CalendarioScreen:React.FC = () =>{
               minDate={fechaActual} //Aqui se declara el dia minimo para ser seleccionado
               //maxDate={fechaActual}
               renderEmptyDate={renderEmptyDate}
-              //markingType={'multi-dot'}
-              //markedDates={marcas}
+              
+              markingType={'multi-dot'}
+              markedDates={{
+              '2021-11-01': {dots: [mentoria, revision, mentoriaExt], selected: true, selectedColor: 'red'},
+              '2021-11-02': {dots: [revision, mentoriaExt]},
+              '2021-11-03': {dots: [mentoria, mentoriaExt],},
+              '2021-11-05': {dots: [mentoria],}
+              }}
             />
      </View>
     );
@@ -148,13 +155,13 @@ const styles = StyleSheet.create({
       flex: 1,
       marginTop: 50
   },
-  Mentoria:{
+  mentoria:{
     backgroundColor: "red",
   },
-  Revision:{
+  revision:{
     backgroundColor: "black",
   },
-  MentoriaExterna:{
+  mentoriaExterna:{
     backgroundColor: "green",
   }
 });

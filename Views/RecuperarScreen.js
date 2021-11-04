@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet,TouchableOpacity,Image,TextInput} from 'react-native';
+import {Text, View, StyleSheet,TouchableOpacity,Image,TextInput,ImageBackground} from 'react-native';
 import { Card, Paragraph, Avatar,Button} from 'react-native-paper';
 import imageSoni from '../assets/SONIAPP.png'
 
 const RegisterScreen =({navigation})=>{
 
     const [correo,setCorreo]=React.useState('');
+    const image = { uri: "https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png" };
+
 
     _Regresar=()=>{
         navigation.navigate('LoginScreen');
@@ -23,7 +25,9 @@ const RegisterScreen =({navigation})=>{
                     <Button icon="arrow-left" color="black">Regresar</Button>
                 </TouchableOpacity>
                 <View style={styles.soniapp}>
+                    <ImageBackground source={image} style={styles.imageHackademy} resizeMode="cover">
                     <Image source={imageSoni} style={styles.imageSonia}/>
+                    </ImageBackground>
                 </View>
                 <View style={styles.form1}>
                     <TextInput placeholder={'Ingresa tu correo'} style={styles.cuadroTexto} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setCorreo}/>
@@ -40,19 +44,26 @@ const styles = StyleSheet.create({
        flex: 1
    },
    flecha:{
-       flex:1,
+       flex:0,
        alignItems: 'flex-start',
        justifyContent: 'center',
        transform: [{ scale: 1.5 },{ translateX: 55 }]
    },
     soniapp:{
-        flex:1,
+        flex:2,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 50,
     },
     imageSonia:{
         height: 200,
+        width: 250,
+        marginLeft: 5,
+    },
+    imageHackademy:{
+        flex: 0,
+        justifyContent: "center",
+        height: 250,
         width: 250,
     },
     form1:{

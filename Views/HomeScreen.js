@@ -17,7 +17,7 @@ const HomeScreen=({navigation})=>{
   _deleteToken=async()=>{
     try{
       await AsyncStorage.removeItem('userToken');
-      navigation.navigate('AuthLoadingScreen'); 
+      navigation.navigate('LoginScreen'); 
       } catch(e){}
   }
 
@@ -33,7 +33,6 @@ const HomeScreen=({navigation})=>{
         <Button title={"Calendario"} onPress={()=>{_calendario()}}></Button>
         </View>
   );
-  console.log(user);
 };
 export default HomeScreen;
 
