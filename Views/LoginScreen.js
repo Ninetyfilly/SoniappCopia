@@ -90,6 +90,7 @@ const LoginScreen=({navigation})=>{
                 <TouchableOpacity  style={styles.bottonLogin} onPress={()=>{_Login()}}>
                     <Text style={styles.textoBotonLogin}>       Login </Text>
                 </TouchableOpacity>
+                <Text style={{flex : 3}}></Text>
             </View>
         </KeyboardAvoidingView>
         );
@@ -116,9 +117,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     soniapp:{
-        flex:5,
+        flex:3,
         alignItems: 'center',
-        justifyContent: 'center',
     },
    form:{
        flex: 2,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
   },
   bottonLogin:{
-        flex: 4,
+        flex: 0,
         marginTop: 40,
         alignItems: 'center',
    },
