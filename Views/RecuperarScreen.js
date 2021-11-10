@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet,TouchableOpacity,Image,TextInput,ImageBackground} from 'react-native';
+import {Text, View, StyleSheet,TouchableOpacity,Image,TextInput,ImageBackground,Alert} from 'react-native';
 import { Card, Paragraph, Avatar,Button} from 'react-native-paper';
 import imageSoni from '../assets/SONIAPP.png'
 
@@ -8,14 +8,31 @@ const RegisterScreen =({navigation})=>{
     const [correo,setCorreo]=React.useState('');
     const image = { uri: "https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png" };
 
+    enviarCorreo =async()=>{
+        if(correo == ''){
+            Alert.alert('Por favor, ingresa tu correo')
+        }else{
+        await fetch('https://api.soniapp.hackademy.lat//users/request-reset-email/',{
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                    'Content-Type':'application/json'
+                },
+                body:  JSON.stringify({
+                    email: correo,
+                }),
+            }).then((response) => response.json())
+            .then((res) => {
+            if(res.hasOwnProperty('hecho')){
+                Alert.alert('El enlace de recuperacion ha sido enviado a su correo');
+                navigation.navigate('LoginScreen');
+                }
+            })
+        }
+    }
 
     _Regresar=()=>{
         navigation.navigate('LoginScreen');
-    }
-
-    _Regristro=()=>{
-        navigation.navigate('LoginScreen');
-        
     }
 
 
@@ -32,7 +49,7 @@ const RegisterScreen =({navigation})=>{
                 <View style={styles.form1}>
                     <TextInput placeholder={'Ingresa tu correo'} style={styles.cuadroTexto} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setCorreo}/>
                 </View>
-                <TouchableOpacity style={styles.form2} onPress={()=>{_Regristro()}}>
+                <TouchableOpacity style={styles.form2} onPress={()=>{enviarCorreo()}}>
                     <Text style={styles.textoBotonRecuperar}> Recuperar Contraseña </Text>
                 </TouchableOpacity>
             </View>

@@ -1,11 +1,10 @@
-import React,{useCallback, useEffect} from 'react';
+import React,{useEffect} from 'react';
 import {View,Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthLoadingScreen=({navigation})=>{
 
     const [token, setToken] = React.useState('');
-
     
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -19,32 +18,11 @@ const AuthLoadingScreen=({navigation})=>{
 
     _signIn=async ()=>{
         const userToken =await AsyncStorage.getItem('userToken')
-        //_verifyToken(userToken);
-        //if(userToken != null){
-           // _refreshToken(userToken);
-        //}
+        _verifyToken(userToken);
         navigation.navigate(userToken? 'HomeScreen': 'LoginScreen')
     }
 
     _verifyToken=(userToken)=>{
-        fetch('http://192.168.1.5:4000/api/token-verify',{
-                method: 'POST',
-                headers:{
-                    Accept:'application/json',
-                        'Content-Type':'application/json'
-                },
-                body: JSON.stringify({
-                    token: userToken,
-                }),
-            }).then((response) => response.json())
-            .then((responseJson) =>{
-                if(!responseJson.hasOwnProperty('token')){
-                    AsyncStorage.removeItem('userToken')
-                }
-            });
-    }
-
-    _refreshToken=(userToken)=>{
         fetch('https://api.soniapp.hackademy.lat/users/tokenrefresh/',{
                 method: 'POST',
                 headers:{
@@ -56,17 +34,10 @@ const AuthLoadingScreen=({navigation})=>{
                 }),
             }).then((response) => response.json())
             .then((responseJson) =>{
-                if(responseJson.hasOwnProperty('token')){
-                    _replaceTokenStorage(responseJson.token);
-                }else{
-                    AsyncStorage.removeItem(userToken);
+                if(!responseJson.hasOwnProperty('message')){
+                    AsyncStorage.removeItem('userToken')
                 }
             });
-    }
-        
-    _replaceTokenStorage=async (userToken)=>{
-        await AsyncStorage.removeItem(userToken);
-        await AsyncStorage.setItem('userToken',userToken);
     }
 
     return(

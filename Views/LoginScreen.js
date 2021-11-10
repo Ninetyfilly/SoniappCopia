@@ -20,6 +20,8 @@ const LoginScreen=({navigation})=>{
     _signIn =async(token) =>{
         try {
             await AsyncStorage.setItem('userToken',token);
+            await AsyncStorage.setItem('user', user);
+            await AsyncStorage.setItem('password',password);
             navigation.navigate('HomeScreen')            
         } catch (error) {
             Alert.alert("ERROOOOOOOOOOR en logiiin")
