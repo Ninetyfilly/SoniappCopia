@@ -19,7 +19,7 @@ const LoginStackScreen = ({navigation}) =>{
     return(
         <LoginStacks.Navigator screenOptions={{headerShown: false,}}>
             <LoginStacks.Screen name='Login' component={LoginScreen}/>
-            <LoginStacks.Screen name='RecuperarScreen' component={RecuperarScreen} />
+            <LoginStacks.Screen name='RecuperarScreen' component={RecuperarScreen}/>
         </LoginStacks.Navigator>
     );
 }
@@ -27,10 +27,10 @@ const LoginStackScreen = ({navigation}) =>{
 const MenuStackScreen = ({navigation}) =>{
     return(
         <MenuStacks.Navigator screenOptions={{headerShown: false,}}>
-            <MenuStacks.Screen name='Home' component={HomeScreen} />
-            <MenuStacks.Screen name='ProfileScreen' component={ProfileScreen} />
-            <MenuStacks.Screen name='CalendarioScreen' component={CalendarioScreen} />
-            <MenuStacks.Screen name='NotificacionScreen' component={NotificacionScreen} />
+            <MenuStacks.Screen name='Home' component={HomeScreen}/>
+            <MenuStacks.Screen name='ProfileScreen' component={ProfileScreen}/>
+            <MenuStacks.Screen name='CalendarioScreen' component={CalendarioScreen}/>
+            <MenuStacks.Screen name='NotificacionScreen' component={NotificacionScreen}/>
         </MenuStacks.Navigator>
     );
 }
@@ -38,10 +38,10 @@ const MenuStackScreen = ({navigation}) =>{
 const MainStack=()=>{
     return(
         <NavigationContainer>
-            <MainStacks.Navigator initialRouteName="AuthLoadingScreen">
-                <MainStacks.Screen name='LoginScreen' component={LoginStackScreen} options={{headerShown: false,}}/>
+            <MainStacks.Navigator initialRouteName="AuthLoadingScreen" screenOptions={{headerShown: false,}}>
+                <MainStacks.Screen name='LoginScreen' component={LoginStackScreen}/>
                 <MainStacks.Screen name='AuthLoadingScreen' component={AuthLoadingScreen}/>
-                <MainStacks.Screen name='HomeScreen' component={MenuStackScreen}options={{headerShown: false,}}/>
+                <MainStacks.Screen name='HomeScreen' component={MenuStackScreen}/>
             </MainStacks.Navigator>
         </NavigationContainer>
     );
