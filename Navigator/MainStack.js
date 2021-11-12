@@ -14,11 +14,11 @@ import RegistrarContraScreen from '../Views/RegistrarContraScreen'
 
 const MainStacks = createStackNavigator();
 const LoginStacks = createStackNavigator();
-const MenuStacks = createStackNavigator();
+const MenuStacks = createMaterialBottomTabNavigator();
 
 const LoginStackScreen = ({navigation}) =>{
     return(
-        <LoginStacks.Navigator screenOptions={{headerShown: false,}}>
+        <LoginStacks.Navigator screenOptions={{headerShown: false,}} >
             <LoginStacks.Screen name='Login' component={LoginScreen}/>
             <LoginStacks.Screen name='RecuperarScreen' component={RecuperarScreen}/>
         </LoginStacks.Navigator>
@@ -27,11 +27,29 @@ const LoginStackScreen = ({navigation}) =>{
 
 const MenuStackScreen = ({navigation}) =>{
     return(
-        <MenuStacks.Navigator screenOptions={{headerShown: false,}}>
-            <MenuStacks.Screen name='Home' component={HomeScreen}/>
-            <MenuStacks.Screen name='ProfileScreen' component={ProfileScreen}/>
-            <MenuStacks.Screen name='CalendarioScreen' component={CalendarioScreen}/>
-            <MenuStacks.Screen name='NotificacionScreen' component={NotificacionScreen}/>
+        <MenuStacks.Navigator screenOptions={{headerShown: false,}} initialRouteName="Home" activeColor="#e91e63">
+            <MenuStacks.Screen name='Home' component={HomeScreen} 
+                options={{
+                tabBarLabel: 'Home',tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons name="home" color={color} size={26} />
+                    ),
+                }}/>
+            <MenuStacks.Screen name='Profile' component={ProfileScreen}
+                options={{
+                tabBarLabel: 'Profile',tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons name="account" color={color} size={26} />
+                    ),
+                }}/>
+            <MenuStacks.Screen name='Calendario' component={CalendarioScreen}options={{
+            tabBarLabel: 'Calendar',tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="calendar" color={color} size={26} />
+                ),
+            }}/>
+            <MenuStacks.Screen name='Notificaciones' component={NotificacionScreen}options={{
+            tabBarLabel: 'Notification',tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="bell" color={color} size={26} />
+                ),
+            }}/>
         </MenuStacks.Navigator>
     );
 }
@@ -39,7 +57,7 @@ const MenuStackScreen = ({navigation}) =>{
 const MainStack=()=>{
     return(
         <NavigationContainer>
-            <MainStacks.Navigator initialRouteName="RegistrarContraScreen" screenOptions={{headerShown: false,}}>
+            <MainStacks.Navigator initialRouteName="AuthLoadingScreen" screenOptions={{headerShown: false,}}>
                 <MainStacks.Screen name='LoginScreen' component={LoginStackScreen}/>
                 <MainStacks.Screen name='AuthLoadingScreen' component={AuthLoadingScreen}/>
                 <MainStacks.Screen name='HomeScreen' component={MenuStackScreen}/>

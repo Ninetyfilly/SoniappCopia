@@ -1,46 +1,62 @@
 import React, {Component} from 'react';
-import {Text, View, Button, StyleSheet} from 'react-native';
+import {Text, View, Button, StyleSheet,ImageBackground,Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import imageSoni from '../assets/SONIAPP.png'
+
 
 const HomeScreen=({navigation})=>{
 
   const [user, setUser] = React.useState('');
 
-  _getUser=async ()=>{
+  const _getUser=async ()=>{
     try{
         const user=await AsyncStorage.getItem('user');
         setUser(user);
-        } catch(e){ }
+      } catch(e){ }
   }
+
   _getUser();
 
-  _deleteToken=async()=>{
+  const _deleteToken=async()=>{
     try{
       await AsyncStorage.removeItem('userToken');
       navigation.navigate('LoginScreen'); 
       } catch(e){}
   }
 
-  _calendario=()=>{
-    navigation.navigate('CalendarioScreen');
-  }
+  const image = { uri: "https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png" };
 
   return (
-        <View style={styles.view}>
-        <Text>Hola {user} bienvenido </Text>
-        <Button title={"Perfil"} onPress={()=>{navigation.navigate('ProfileScreen')}}></Button>
-        <Button title={"Cerrar Sesion"} onPress={()=>{_deleteToken()}}></Button>
-        <Button title={"Calendario"} onPress={()=>{_calendario()}}></Button>
-        </View>
+    <View style={styles.soniapp}>
+      <ImageBackground source={image} style={styles.imageHackademy} resizeMode="cover">
+        <Image source={imageSoni} style={styles.imageSonia}/>
+      </ImageBackground>
+      <Button title={"Cerrar Sesion"} style={styles.logOut} styonPress={()=>{_deleteToken()}}></Button>
+    </View>
   );
 };
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-   view:{
-       flex: 1,
-       alignItems: 'center',
-       justifyContent: 'center',
-   }
-   
+   soniapp:{
+        flex:1,
+        alignItems: 'center',
+    },
+   imageSonia:{
+        height: 200,
+        width: 250,
+        marginLeft: 5,
+    },
+    imageHackademy:{
+        flex: 1,
+        justifyContent: "center",
+        height: 250,
+        width: 250,
+    },
+    logOut:{
+        flex: 1,
+        justifyContent: "center",
+        height: 250,
+        width: 250,
+    },
 });
