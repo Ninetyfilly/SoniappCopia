@@ -10,6 +10,7 @@ import RecuperarScreen from '../Views/RecuperarScreen'
 import AuthLoadingScreen from '../Views/AuthLoadingScreen'
 import CalendarioScreen from '../Views/CalendarioScreen'
 import NotificacionScreen from '../Views/NotificacionScreen'
+import RegistrarContraScreen from '../Views/RegistrarContraScreen'
 
 const MainStacks = createStackNavigator();
 const LoginStacks = createStackNavigator();
@@ -38,10 +39,11 @@ const MenuStackScreen = ({navigation}) =>{
 const MainStack=()=>{
     return(
         <NavigationContainer>
-            <MainStacks.Navigator initialRouteName="AuthLoadingScreen" screenOptions={{headerShown: false,}}>
+            <MainStacks.Navigator initialRouteName="RegistrarContraScreen" screenOptions={{headerShown: false,}}>
                 <MainStacks.Screen name='LoginScreen' component={LoginStackScreen}/>
                 <MainStacks.Screen name='AuthLoadingScreen' component={AuthLoadingScreen}/>
                 <MainStacks.Screen name='HomeScreen' component={MenuStackScreen}/>
+                <MainStacks.Screen name='RegistrarContraScreen' component={RegistrarContraScreen}/>
             </MainStacks.Navigator>
         </NavigationContainer>
     );

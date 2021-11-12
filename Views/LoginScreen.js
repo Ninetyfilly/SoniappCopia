@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {Text, View,StyleSheet,StatusBar,TextInput,TouchableOpacity,Platform, Image, KeyboardAvoidingView,Alert, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import imageSoni from '../assets/SONIAPP.png'
-import imageVer from '../assets/ojoVer.png'
-import imageOcultar from '../assets/ojoOculto.png'
 import {Button} from 'react-native-paper';
 
 const LoginScreen=({navigation})=>{
