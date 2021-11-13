@@ -20,7 +20,7 @@ const HomeScreen=({navigation})=>{
   const _deleteToken=async()=>{
     try{
       await AsyncStorage.removeItem('userToken');
-      navigation.navigate('LoginScreen'); 
+      navigation.navigate('Login'); 
       } catch(e){}
   }
 

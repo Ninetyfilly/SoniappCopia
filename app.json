@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "soniapp",
     "name": "SoniApp",
     "slug": "SoniApp",
     "version": "1.0.0",

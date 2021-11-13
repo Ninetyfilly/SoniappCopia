@@ -1,4 +1,15 @@
 export function validatePassword(password) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(password);
+    let newPassword = password;
+    let minNumberofChars = 8;
+    let maxNumberofChars = 20;
+    let regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+    let error = '';
+    alert(newPassword); 
+    if(newPassword.length < minNumberofChars || newPassword.length > maxNumberofChars){
+        error = "La contraseña no debe de estar vacia"
+        return error;
+    }else if(!regularExpression.test(newPassword)) {
+        error = "La contraseña debe de contener al menos un caracter especial"
+        return error;
+}
 }

@@ -11,12 +11,15 @@ const RegisterScreen =({navigation})=>{
     //hokks
     const [password,setPassword]=React.useState('');
     const [passwordConfirm,setPasswordConfirm]=React.useState('');
-    const [errorPassword,setErrorPassword]=React.useState('');
-    const [errorPasswordConfirm,setErrorPasswordConfirm]=React.useState('');
+
+
     const [mostrarTop, setMostrarTop] = React.useState(false);
     const [shownTop, setShownTop] = React.useState(false);
+
     const [mostrarBot, setMostrarBot] = React.useState(false);
     const [shownBot, setShownBot] = React.useState(false);
+    
+    const [errors, setErros] = React.useState({});
 
     const image = { uri: "https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png" };
     const mostrarContraseñaTop = () =>setShownTop(!shownTop);
@@ -35,6 +38,13 @@ const RegisterScreen =({navigation})=>{
             mostrarPasswordBot();
         };
 
+    const onSubmit= () => {
+        if(validatePassword(password) == 'La contraseña no debe de estar vacia'){
+            Alert.alert("La contraseña no debe de estar vacia")
+        }else if(validatePassword(password) == 'La contraseña debe de contener al menos un caracter especial'){
+            Alert.alert("La contraseña debe de contener al menos un caracter especial")
+        }
+    }
     return(
         <View style={styles.view}>
             <View style={styles.soniapp}>
@@ -46,36 +56,42 @@ const RegisterScreen =({navigation})=>{
                     <Text style={styles.textButtonHide}> {mostrarTop ? "OCULTAR" : "MOSTRAR"} </Text>
                 </TouchableOpacity>
             <View style={styles.formContra}> 
-                {/*<TextInput placeholder={'C0ntraseña%'} style={styles.cuadroTexto} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setPasswordConfirm}/>*/}
                 <OutlinedTextField
                 label='Ingresa tu contraseña'
                 maxLength={21}
                 characterRestriction={20}
                 secureTextEntry={shownTop ? false : true}
                 onChangeText={setPassword}
+                autoCapitalize="none"
+                autoCorrect={false}
                 />
             </View>
             <TouchableOpacity style={styles.formPasswordBot} onPress={()=>{funcionesContraseñaBot()}}>
                     <Text style={styles.textButtonHide}> {mostrarBot ? "OCULTAR" : "MOSTRAR"} </Text>
                 </TouchableOpacity>
             <View style={styles.formContraConfirm}>
-                {/*<TextInput placeholder={'C0ntraseña%'} style={styles.cuadroTexto} placeholderTextColor={'black'} autoCapitalize='none' onChangeText={setPasswordConfirm}/>*/}
                 <OutlinedTextField
                 label='Confirma tu contraseña'
                 maxLength={21}
                 characterRestriction={20}
                 secureTextEntry={shownBot ? false : true}
                 onChangeText={setPasswordConfirm}
+                onSubmitEditing={onSubmit}
+                autoCapitalize="none"
+                autoCorrect={false}
+                error={errors.password}
                 />
             </View>
-            <TouchableOpacity style={styles.form2} onPress={()=>{registrarContraseña()}}>
+            <TouchableOpacity style={styles.form2} onPress={()=>{onSubmit()}}>
                 <Text style={styles.textoBotonRecuperar}> Registrar Contraseña </Text>
             </TouchableOpacity>
             <Text style={{flex : 2}}></Text>
         </View>
     );
 }
+
 export default RegisterScreen;
+
 const styles = StyleSheet.create({
    view:{
        flex: 1

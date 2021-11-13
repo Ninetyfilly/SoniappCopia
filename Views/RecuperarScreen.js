@@ -25,14 +25,14 @@ const RegisterScreen =({navigation})=>{
             .then((res) => {
             if(res.hasOwnProperty('hecho')){
                 Alert.alert('El enlace de recuperacion ha sido enviado a su correo');
-                navigation.navigate('LoginScreen');
+                navigation.navigate('Login');
                 }
             })
         }
     }
 
     _Regresar=()=>{
-        navigation.navigate('LoginScreen');
+        navigation.navigate('Login');
     }
 
 
