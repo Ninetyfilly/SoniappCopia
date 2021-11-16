@@ -15,12 +15,14 @@ const AuthLoadingScreen=({navigation})=>{
         return unsubscribe;
     },[navigation]);
 
+    
 
     _signIn=async ()=>{
         const userToken =await AsyncStorage.getItem('userToken')
         _verifyToken(userToken);
         navigation.navigate(userToken? 'HomeScreen': 'LoginScreen')
     }
+
 
     _verifyToken=(userToken)=>{
         fetch('https://api.soniapp.hackademy.lat/users/tokenrefresh/',{

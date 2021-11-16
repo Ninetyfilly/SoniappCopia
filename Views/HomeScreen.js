@@ -20,7 +20,7 @@ const HomeScreen=({navigation})=>{
   const _deleteToken=async()=>{
     try{
       await AsyncStorage.removeItem('userToken');
-      navigation.navigate('Login'); 
+      navigation.navigate('LoginScreen'); 
       } catch(e){}
   }
 
@@ -31,7 +31,7 @@ const HomeScreen=({navigation})=>{
       <ImageBackground source={image} style={styles.imageHackademy} resizeMode="cover">
         <Image source={imageSoni} style={styles.imageSonia}/>
       </ImageBackground>
-      <Button title={"Cerrar Sesion"} style={styles.logOut} styonPress={()=>{_deleteToken()}}></Button>
+      <Button title={"Cerrar Sesion"} style={styles.logOut} onPress={()=>{_deleteToken()}}></Button>
     </View>
   );
 };

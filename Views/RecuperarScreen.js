@@ -25,7 +25,7 @@ const RegisterScreen =({navigation})=>{
             .then((res) => {
             if(res.hasOwnProperty('hecho')){
                 Alert.alert('El enlace de recuperacion ha sido enviado a su correo');
-                navigation.navigate('Login');
+                navigation.navigate('VerificateScreen');
                 }
             })
         }

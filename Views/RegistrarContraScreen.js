@@ -1,9 +1,11 @@
-import React, {Component, Linking} from 'react';
+import React, {Component} from 'react';
 import {Text, View, StyleSheet,TouchableOpacity,Image,TextInput,ImageBackground,Alert,Button} from 'react-native';
 import { Card, Paragraph, Avatar} from 'react-native-paper';
 import imageSoni from '../assets/SONIAPP.png'
 import {validatePassword} from '../Utils/Helpers';
-import {TextField,FilledTextField,OutlinedTextField,} from 'rn-material-ui-textfield';
+import {OutlinedTextField} from 'rn-material-ui-textfield';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Linking from 'expo-linking';
 
 
 const RegisterScreen =({navigation})=>{
@@ -11,7 +13,9 @@ const RegisterScreen =({navigation})=>{
     //hokks
     const [password,setPassword]=React.useState('');
     const [passwordConfirm,setPasswordConfirm]=React.useState('');
-
+    
+    const [token,setToken]=React.useState('');
+    const [uid,setUid]=React.useState('');
 
     const [mostrarTop, setMostrarTop] = React.useState(false);
     const [shownTop, setShownTop] = React.useState(false);
@@ -38,13 +42,52 @@ const RegisterScreen =({navigation})=>{
             mostrarPasswordBot();
         };
 
-    const onSubmit= () => {
-        if(validatePassword(password) == 'La contraseña no debe de estar vacia'){
+    const onSubmit= async() => {
+        if(validatePassword(password) == 1){
             Alert.alert("La contraseña no debe de estar vacia")
-        }else if(validatePassword(password) == 'La contraseña debe de contener al menos un caracter especial'){
+        }else if(validatePassword(password) == 2){
             Alert.alert("La contraseña debe de contener al menos un caracter especial")
+        }else if(validatePassword(passwordConfirm) == 1){
+            Alert.alert("La contraseña debe de contener al menos un caracter especial,un numero y una mayuscula")
+        }else if(validatePassword(passwordConfirm) == 2){
+            Alert.alert("La contraseña debe de contener al menos un caracter especial,un numero y una mayuscula")
+        }else{
+            await fetch('https://api.soniapp.hackademy.lat/users/loginmovil/',{
+                method: 'POST',
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    token: token,
+                    uid: uid,
+                    password: password,
+                }),
+            }).then((response) => response.json())
+            .then((responseJson) =>{
+                if(responseJson.hasOwnProperty('token')){
+                    _signIn(responseJson.token);
+                }else if(responseJson.hasOwnProperty('error')){
+                    Alert.alert('Error', 'usuario o contraseña incorrectos');
+                }
+            });
         }
+
     }
+
+    const _getUrl=async ()=>{
+    try{
+        const token=await AsyncStorage.getItem('tokenR');
+        const uid=await AsyncStorage.getItem('uid');
+        setUid(uid);
+        setToken(token);
+    } catch(e){ }
+    }
+    _getUrl();
+
+    const url = Linking.useURL();
+
+    console.log(url)
     return(
         <View style={styles.view}>
             <View style={styles.soniapp}>

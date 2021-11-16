@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component,useEffect} from 'react';
 import {Text, View,StyleSheet,StatusBar,TextInput,TouchableOpacity,Platform, Image, KeyboardAvoidingView,Alert, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import imageSoni from '../assets/SONIAPP.png'
@@ -20,11 +20,29 @@ const LoginScreen=({navigation})=>{
             await AsyncStorage.setItem('userToken',token);
             await AsyncStorage.setItem('user', user);
             await AsyncStorage.setItem('password',password);
-            navigation.navigate('HomeScreen')            
+            navigation.navigate('HomeScreen');            
         } catch (error) {
             Alert.alert("ERROOOOOOOOOOR en logiiin")
         }
 
+    }
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+      // Screen was focused
+      // Do something
+            _redirection();
+        });
+        return unsubscribe;
+    },[navigation]);
+    
+    const _redirection = async() =>{
+        const tokenR = await AsyncStorage.getItem('tokenR');
+        if(tokenR != null){
+            navigation.navigate('RegistrarContraScreen');
+        }else{
+
+        }
     }
 
     _Login= async () =>{

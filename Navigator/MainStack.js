@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Linking from 'expo-linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeScreen from '../Views/HomeScreen'
 import LoginScreen from '../Views/LoginScreen'
@@ -13,23 +14,19 @@ import AuthLoadingScreen from '../Views/AuthLoadingScreen'
 import CalendarioScreen from '../Views/CalendarioScreen'
 import NotificacionScreen from '../Views/NotificacionScreen'
 import RegistrarContraScreen from '../Views/RegistrarContraScreen'
-
-
-
+import VerificateScreen from '../Views/VerificateScreen'
 
 const MainStacks = createStackNavigator();
 const LoginStacks = createStackNavigator();
 const MenuStacks = createMaterialBottomTabNavigator();
-
-
-
-
 
 const LoginStackScreen = ({navigation}) =>{
     return(
         <LoginStacks.Navigator screenOptions={{headerShown: false,}} >
             <LoginStacks.Screen name='Login' component={LoginScreen}/>
             <LoginStacks.Screen name='RecuperarScreen' component={RecuperarScreen}/>
+            <LoginStacks.Screen name='registrarcontra' component={RegistrarContraScreen}/>
+            <LoginStacks.Screen name='VerificateScreen' component={VerificateScreen}/>
         </LoginStacks.Navigator>
     );
 }
@@ -76,23 +73,13 @@ const MenuStackScreen = ({navigation}) =>{
 }
 
 const MainStack=()=>{
-    const prefix = Linking.createURL('/');
 
-    const linking ={
-        prefixes: [prefix],
-        config: {
-            screens:{
-                registrarcontra: "registrarcontra",
-            },
-        },
-    }
-    return(
-        <NavigationContainer linking={linking}>
+  return(
+        <NavigationContainer>
             <MainStacks.Navigator initialRouteName="AuthLoadingScreen" screenOptions={{headerShown: false,}}>
                 <MainStacks.Screen name='LoginScreen' component={LoginStackScreen}/>
                 <MainStacks.Screen name='AuthLoadingScreen' component={AuthLoadingScreen}/>
                 <MainStacks.Screen name='HomeScreen' component={MenuStackScreen}/>
-                <MainStacks.Screen name='registrarcontra' component={RegistrarContraScreen}/>
             </MainStacks.Navigator>
         </NavigationContainer>
     );

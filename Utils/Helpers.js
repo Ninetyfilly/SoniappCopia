@@ -6,10 +6,10 @@ export function validatePassword(password) {
     let error = '';
     alert(newPassword); 
     if(newPassword.length < minNumberofChars || newPassword.length > maxNumberofChars){
-        error = "La contraseña no debe de estar vacia"
+         error =1;//1 es "La contraseña no debe de estar vacia"
         return error;
     }else if(!regularExpression.test(newPassword)) {
-        error = "La contraseña debe de contener al menos un caracter especial"
+        error = 2;//2 es "La contraseña debe de contener al menos un caracter especial"
         return error;
 }
 }
