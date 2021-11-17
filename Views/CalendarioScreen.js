@@ -61,7 +61,7 @@ const CalendarioScreen = () =>{
               const _selectedDay = strTime.toString();
               let tipo = (suceso == 'mentoria'? mentoria: suceso == 'revision'? revision : sesion );
               const markedDates = {[_selectedDay]: {dots: tipo},}
-              setMarcas({...marcas, dias: markedDates});
+              setMarcas({ dias:{...marcas.dias,...markedDates}});
               console.log(marcas);
             }else{
               item[strTime] = [];
