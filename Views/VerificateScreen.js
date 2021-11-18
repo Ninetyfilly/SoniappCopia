@@ -62,7 +62,8 @@ const RegisterScreen =({navigation})=>{
 export default RegisterScreen;
 const styles = StyleSheet.create({
    view:{
-       flex: 1
+       flex: 1,
+       backgroundColor: "white",
    },
     soniapp:{
         flex:2,

@@ -137,7 +137,8 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
    view:{
-       flex: 1
+       flex: 1,
+       backgroundColor: "white",
    },
    flecha:{
        flex:0,

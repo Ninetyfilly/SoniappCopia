@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
   },
   view:{
       flex: 1,
-      marginTop: 50
+      marginTop: 50,
+      backgroundColor: "white",
   },
   mentoria:{
     backgroundColor: "red",

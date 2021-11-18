@@ -84,7 +84,8 @@ const LoginScreen=({navigation})=>{
     }
 
     return(
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined } style={{flex:1}}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined } style={{flex:1, 
+            backgroundColor: "white"}}>
             <StatusBar barStyle='light-content'/>
             <View style={styles.view}>
                 <View style={styles.soniapp}>

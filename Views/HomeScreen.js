@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
    soniapp:{
         flex:1,
         alignItems: 'center',
+        backgroundColor: "white",
     },
    imageSonia:{
         height: 200,
