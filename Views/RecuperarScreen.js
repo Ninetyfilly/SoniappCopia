@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterScreen = ({ navigation }) => {
   const [correo, setCorreo] = React.useState('');
@@ -18,14 +19,15 @@ const RegisterScreen = ({ navigation }) => {
     uri: 'https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png',
   };
 
- const verificate = async ({token, uid, code}) => {
+ const verificate = async ({token, uidb64, code}) => {
     try {
       await AsyncStorage.setItem('resetToken', token);
-      await AsyncStorage.setItem('uid', uid);
-      await AsyncStorage.setItem('code', code);
-      navigation.navigate('verificateScreen');
+      await AsyncStorage.setItem('uidb64', uidb64);
+      await AsyncStorage.setItem('code', `${code}`);
+      navigation.navigate('VerificateScreen');
     } catch (error) {
       Alert.alert('ERROOOOOOOOOOR en verificar');
+      console.log(error)
     }
   };
 
@@ -37,9 +39,9 @@ const RegisterScreen = ({ navigation }) => {
     } else {
       try {
         const { data } = await axios.post(
-          'https://api.soniapp.hackademy.lat/users/request-reset-email/',
+          'https://api.soniapp.hackademy.lat/users/password-reset/',
           {
-            email: correo,
+            email: correo
           }
         );
         console.log(data);

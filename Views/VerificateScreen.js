@@ -12,6 +12,7 @@ import {
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
 import imageSoni from '../assets/SONIAPP.png';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterScreen = ({ navigation }) => {
   const [phoneNum, setPhoneNum] = React.useState('');
@@ -40,7 +41,7 @@ const RegisterScreen = ({ navigation }) => {
       Alert.alert('Por favor, ingresa tu codigo');
     } else if (phoneNum == code) {
       setLoading(false)
-      navigation.navigate(RegistrarContraScreen);
+      navigation.navigate("registrarcontra");
     }
   };
 

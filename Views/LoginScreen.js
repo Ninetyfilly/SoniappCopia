@@ -56,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
           'https://api.soniapp.hackademy.lat/users/login/',
           {
             email: user,
-            password,
+            password
           }
         );
         console.log(data);
@@ -65,6 +65,7 @@ const LoginScreen = ({ navigation }) => {
       } catch (error) {
           setLoading(false)
           Alert.alert("Ha ocurrio un error")
+          console.log(error)
       }
     }
   };

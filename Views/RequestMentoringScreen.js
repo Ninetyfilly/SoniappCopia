@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert,Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput } from 'react-native-paper';
-import DatePicker from 'react-native-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 const moment = require('moment');
 
 const RequestMentory = ({ navigation }) => {
@@ -12,9 +12,30 @@ const RequestMentory = ({ navigation }) => {
 
   const [day, setDay] = React.useState('');
   const [date, setDate] = React.useState(new Date());
+  const [mode, setMode] = React.useState('date');
+  const [show, setShow] = React.useState(false);
   const [showDatePicker, setShowDatePicker] = React.useState(false);
 
-  const onSubmit = async () => {};
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    console.log(currentDate)
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const onSubmit=()=>{
+
+  }
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
 
   return (
     <View>
@@ -40,20 +61,17 @@ const RequestMentory = ({ navigation }) => {
         autoCorrect={false}
         // error={errors.password}
       />
-      <Button title='Open' onPress={() => setShowDatePicker(true)} />
-      <DatePicker
-        modal
-        open={showDatePicker}
-        date={date}
-        mode='date'
-        onConfirm={(date) => {
-          setDate(date);
-          setShowDatePicker(false);
-        }}
-        onCancel={() => {
-          setShowDatePicker(false);
-        }}
-      />
+      <Button onPress={showDatepicker} title="Elegir Dia" />
+      {show && (
+      <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+        )}
       <TextInput
         label='hora'
         mode='outlined'

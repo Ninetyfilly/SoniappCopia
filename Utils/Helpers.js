@@ -4,12 +4,11 @@ export function validatePassword(password) {
     let maxNumberofChars = 20;
     let regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
     let error = '';
-    alert(newPassword); 
     if(newPassword.length < minNumberofChars || newPassword.length > maxNumberofChars){
          error =1;//1 es "La contraseña no debe de estar vacia"
         return error;
     }else if(!regularExpression.test(newPassword)) {
-        error = 2;//2 es "La contraseña debe de contener al menos un caracter especial"
+        error = 2;//2 es"La contraseña debe de contener al menos un caracter especial"
         return error;
 }
 }

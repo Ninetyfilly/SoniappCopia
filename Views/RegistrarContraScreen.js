@@ -15,6 +15,7 @@ import imageSoni from '../assets/SONIAPP.png';
 import { validatePassword } from '../Utils/Helpers';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const RegisterScreen = ({ navigation }) => {
   //hokks
@@ -23,7 +24,7 @@ const RegisterScreen = ({ navigation }) => {
   const [loading, setLoading] = React.useState(false);
 
   const [token, setToken] = React.useState('');
-  const [uid, setUid] = React.useState('');
+  const [uidb64, setUidb64] = React.useState('');
 
   const [mostrarTop, setMostrarTop] = React.useState(false);
   const [shownTop, setShownTop] = React.useState(false);
@@ -55,89 +56,67 @@ const RegisterScreen = ({ navigation }) => {
   const _getData = async () => {
     try {
       const token = await AsyncStorage.getItem('resetToken');
-      const uid = await AsyncStorage.getItem('uid');
-      setToken(token)
-      setUid(uid)
+      const uidb64 = await AsyncStorage.getItem('uidb64');
+      setToken(token);
+      setUidb64(uidb64);
     } catch (e) {
-
+      Alert.alert('Error');
     }
   };
 
   _getData();
 
+   const _signIn =() => {
+    try {
+      Alert.alert('Contraseña Modificaca exitosamente');
+      navigation.navigate('Login');
+    } catch (error) {
+      Alert.alert('ERROOOOOOOOOOR');
+    }
+  };
+
   const onSubmit = async () => {
-    setLoading(true)
+    setLoading(true);
     if (validatePassword(password) == 1) {
-      setLoading(false)
+      setLoading(false);
       Alert.alert('La contraseña no debe de estar vacia');
     } else if (validatePassword(password) == 2) {
-      setLoading(false)
+      setLoading(false);
       Alert.alert(
         'La contraseña debe de contener al menos un caracter especial'
       );
     } else if (validatePassword(passwordConfirm) == 1) {
-      setLoading(false)
+      setLoading(false);
       Alert.alert(
         'La contraseña debe de contener al menos un caracter especial,un numero y una mayuscula'
       );
     } else if (validatePassword(passwordConfirm) == 2) {
-      setLoading(false)
+      setLoading(false);
       Alert.alert(
         'La contraseña debe de contener al menos un caracter especial,un numero y una mayuscula'
       );
     } else {
-      setLoading(false)
-      await fetch('https://api.soniapp.hackademy.lat/users/loginmovil/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token: token,
-          uid: uid,
-          password: password,
-        }),
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.hasOwnProperty('token')) {
-            _signIn(responseJson.token);
-          } else if (responseJson.hasOwnProperty('error')) {
-            Alert.alert('Error', 'usuario o contraseña incorrectos');
-          }
-        });
       try {
-        const { data } = await axios.post(
-          ' https://api.soniapp.hackademy.lat/users/password-reset-complete/',
+        const { data } = await axios.patch(
+          'https://api.soniapp.hackademy.lat/users/password-reset/',
           {
-            password,
+            uidb64,
             token,
-            uid,
+            password
           }
         );
-        setLoading(false)
-        navigation.navigate("LoginScreen");
+        console.log(data);
+        setLoading(false);
+        _signIn();
       } catch (error) {
-        setLoading(false)
-        Alert.alert("Ha ocurrio un error")
+        setLoading(false);
+        Alert.alert('Ha ocurrio un error');
+        console.log(error);
       }
     }
   };
 
-  const _getUrl = async () => {
-    try {
-      const token = await AsyncStorage.getItem('tokenR');
-      const uid = await AsyncStorage.getItem('uid');
-      setUid(uid);
-      setToken(token);
-    } catch (e) {}
-  };
-  _getUrl();
-
-  const url = Linking.useURL();
-
-  console.log(url);
+ 
   return (
     <View style={styles.view}>
       <View style={styles.soniapp}>
@@ -189,10 +168,8 @@ const RegisterScreen = ({ navigation }) => {
           characterRestriction={20}
           secureTextEntry={shownBot ? false : true}
           onChangeText={setPasswordConfirm}
-          onSubmitEditing={onSubmit}
           autoCapitalize='none'
           autoCorrect={false}
-          error={errors.password}
         />
       </View>
       <TouchableOpacity
@@ -201,7 +178,9 @@ const RegisterScreen = ({ navigation }) => {
           onSubmit();
         }}
       >
-        <Text style={styles.textoBotonRecuperar}> {loading?"Cargando...":"Registrar Contraseña"} </Text>
+        <Text style={styles.textoBotonRecuperar}>
+          {loading ? 'Cargando...' : 'Registrar Contraseña'}
+        </Text>
       </TouchableOpacity>
       <Text style={{ flex: 2 }}></Text>
     </View>
