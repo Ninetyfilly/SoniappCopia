@@ -28,8 +28,11 @@ const RequestMentory = ({ navigation }) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [typeArray, setTypeArray] = useState([]);
   const [items, setItems] = useState([]);
+  const [id, setId] = useState([]);
   const [mentores, setMentores] = useState([]);
   const [date, setDate] = useState([]);
+  
+  const [ejemplo, setEjemplo] = useState({});
 
   const [mentorArray, setMentorArray] = useState([]);
   const [dateArray, setDateArray] = useState([]);
@@ -176,8 +179,32 @@ const RequestMentory = ({ navigation }) => {
   const _Login = () => {
   };
 
+  setEjemplo({
+    titulo: "este es un titulo",
+    mentoring: "React native",
+    mentor: "Luis",
+    date: "martes 25"
+  })
+
   return (
     <View style={styles.view}>
+      <Text>Selecciona la mentoria que deseas editar</Text>
+      <RNPickerSelect //mentoring
+        onValueChange={(value) => console.log(value)}
+        items={id}
+        placeholder={ejemplo.titulo}
+        useNativeAndroidPickerStyle={false}
+        style={{
+          ...pickerSelectStyles,
+          iconContainer: {
+            top: 10,
+            right: 12,
+          },
+        }}
+        Icon={() => {
+          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+        }}
+      />
       <TextInput
         label='titulo'
         mode='outlined'

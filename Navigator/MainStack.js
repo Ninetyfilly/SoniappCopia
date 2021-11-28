@@ -15,6 +15,7 @@ import NotificacionScreen from '../Views/NotificacionScreen';
 import RegistrarContraScreen from '../Views/RegistrarContraScreen';
 import VerificateScreen from '../Views/VerificateScreen';
 import RequestMentoringScreen from '../Views/RequestMentoringScreen';
+import EditRequestMentoringScreen from '../Views/EditRequestMentoringScreen';
 
 const MainStacks = createStackNavigator();
 const LoginStacks = createStackNavigator();
@@ -46,6 +47,10 @@ const HamburguerStackScreens = ({ navigation }) => {
         name='Solicitar Mentoria'
         component={RequestMentoringScreen}
       />
+      <HamburguerStack.Screen
+        name='Editar Mentoria Solicitada'
+        component={EditRequestMentoringScreen}
+      />
     </HamburguerStack.Navigator>
   );
 };
@@ -62,7 +67,7 @@ const MenuStackScreens = ({ navigation }) => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='home' color={color} size={26} />
           ),
-          tabBarColor: 'blue',
+          tabBarColor: '#00b7b8',
         }}
       />
 
@@ -85,7 +90,7 @@ const MenuStackScreens = ({ navigation }) => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='calendar' color={color} size={26} />
           ),
-          tabBarColor: 'black',
+          tabBarColor: '#00b7b8',
         }}
       />
       <MenuStacks.Screen

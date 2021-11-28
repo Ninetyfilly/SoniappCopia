@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop:35
   },
   mentoria: {
     backgroundColor: 'red',
