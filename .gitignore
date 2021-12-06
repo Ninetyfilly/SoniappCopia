@@ -7,8 +7,8 @@ npm-debug.*
 *.key
 *.mobileprovision
 .prettierrc
+.http
 *.orig.*
 web-build/
-
 # macOS
 .DS_Store

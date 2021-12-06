@@ -6,47 +6,69 @@ import {
   TouchableOpacity,
   Alert,
   Button,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-paper';
 import axios from 'axios';
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const RequestMentory = ({ navigation }) => {
-  const [loading, setLoading] = React.useState(false);
+  const _format = 'YYYY-MM-DD';
+
+  const [loading, setLoading] = useState(false);
   const [mentoringTypes, setMentoringTypes] = useState({
     mentoring_types: [],
   });
-
   const [title, setTitle] = useState('');
+  const [idMentoring, setIdMentoring] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedType, setSelectedType] = useState('');
-  const [mentor, setMentor] = useState({ mentors: [] });
+  const [diaDisponible, setDiaDisponible] = useState('');
 
-  const [availability, setAvailability] = useState({ availability: [] });
+  const [later, setLater] = useState('');
 
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [typeArray, setTypeArray] = useState([]);
   const [items, setItems] = useState([]);
-  const [id, setId] = useState([]);
   const [mentores, setMentores] = useState([]);
-  const [date, setDate] = useState([]);
+  const [availability, setAvailability] = useState([]);
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [day, setDay] = useState('');
+  const [time, setTime] = useState('');
+  const [token, setToken] = useState('');
   
-  const [ejemplo, setEjemplo] = useState({});
+  const [initialHour, setInitialHour] = useState('');
+  const [finalHour, setFinalHour] = useState('');
 
   const [mentorArray, setMentorArray] = useState([]);
   const [dateArray, setDateArray] = useState([]);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const [mentorSelected, setMentorSelected] = useState('');
+  const [mentorId, setMentorId] = useState('');
+  const [mentoringId, setMentoringId] = useState('');
+
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', async () => {
+    const unsubscribe = navigation.addListener('focus', () => {
       // Screen was focused
       // Do something
-      await getMentoring();
+      getMentoring();
+      getToken();
     });
     return unsubscribe;
-  });
+  }, [navigation]);
+
+  useEffect(() => {
+    filterType();
+    console.log('Listo');
+  }, [mentoringTypes]);
 
   const getMentoring = async () => {
     try {
@@ -55,37 +77,45 @@ const RequestMentory = ({ navigation }) => {
       );
       setMentoringTypes({ mentoring_types: data.mentoring_types });
       // console.log(mentoringTypes.mentoring_types);
-      filterType();
-      renderItems();
     } catch (error) {
       console.log(error + ' ha salido mal sin aprametros');
     }
   };
 
-  const getMentor = async (skill) => {
-    try {
-      const { data } = await axios.get(
-        `https://api.soniapp.hackademy.lat/events/mentoringdata/?skill=${skill}`
-      );
-      setMentor({ mentors: data.mentors });
-      filterMentor();
-      renderMentors();
-    } catch (error) {
-      console.log(error + ' ha salido mal skill');
-    }
+  const getMentor = (id) => {
+    setMentoringId(id);
+    const mentory = mentoringTypes.mentoring_types.find(
+      (item) => item.id == id
+    );
+    setLater(mentory.name);
+    console.log(later)
+    const mentors = mentory.mentors.map((item) => {
+      return { label: item.name, value: item.id };
+    });
+    setMentores(mentors);
   };
 
-  const getAvailability = async (id) => {
-    try {
-      const { data } = await axios.get(
-        `https://api.soniapp.hackademy.lat/events/mentoringdata/?mentor=${id}`
-      );
-      setAvailability({ availability: data.availability });
-      filterAvailability();
-      renderAvailability();
-    } catch (error) {
-      console.log(error + ' ha salido mal id');
-    }
+  const getAvailability = (id) => {
+    const mentory = mentoringTypes.mentoring_types.find(
+      (item) => item.name == later
+    );
+    const mentors = mentory.mentors.find((item) => {
+      return item.id == id;
+    });
+    setMentorSelected(mentors.name);
+    setMentorId(mentors.id);
+    const disponibilidad = mentors.availability.map((item) => {
+      return {
+        label:
+          item.day +
+          ' Hora Inicial: ' +
+          item.start_hour +
+          ' Hora final: ' +
+          item.final_hour,
+        value: item.day,
+      };
+    });
+    setAvailability(disponibilidad);
   };
 
   const filterType = () => {
@@ -95,104 +125,124 @@ const RequestMentory = ({ navigation }) => {
       index <= mentoringTypes.mentoring_types.length;
       index++
     ) {
-      const types = mentoringTypes.mentoring_types
-        .filter((item) => item.id == index)
-        .map((item) => item.name);
-      let type = types.toString();
-      newTypes[index] = type;
-    }
-    setTypeArray([...newTypes]);
-  };
-
-  const filterMentor = () => {
-    const newMentor = [];
-    for (let index = 1; index <= mentor.mentors.length; index++) {
-      const name = mentor.mentors
-        .filter((item) => item.id == index)
-        .map((item) => item.name);
-      let type = name.toString();
-      newMentor[index] = type;
-    }
-    setMentorArray([...newMentor]);
-  };
-
-  const filterAvailability = () => {
-    const newAvailability = [];
-    for (let index = 1; index <= availability.availability.length; index++) {
-      const day = availability.availability
-        .filter((item) => item.id == index)
-        .map((item) => item.day);
-
-      const initialHour = availability.availability
-        .filter((item) => item.id == index)
-        .map((item) => item.start_hour);
-
-      const finalHour = availability.availability
-        .filter((item) => item.id == index)
-        .map((item) => item.final_hour);
-
-      let day1 = day.toString();
-      let iniH = initialHour.toString();
-      let finH = finalHour.toString();
-
-      newAvailability[
-        index
-      ] = `dia: ${day1} \n Hora inicial: ${iniH}\nHora Final: ${finH}`;
-    }
-    console.log(availability.availability);
-    setDateArray([...newAvailability]);
-  };
-
-  const renderItems = () => {
-    const newItems = [];
-    for (let index = 0; index < typeArray.length - 1; index++) {
-      newItems[index] = {
-        label: typeArray[index + 1],
-        value: typeArray[index + 1],
+      const typeMentoring = mentoringTypes.mentoring_types.find(
+        (item) => item.id == index
+      );
+      newTypes[index - 1] = {
+        label: typeMentoring.name,
+        value: typeMentoring.id,
       };
     }
-    setItems([...newItems]);
+    setItems(newTypes);
   };
 
-  const renderMentors = () => {
-    const newMentor = [];
-    for (let index = 0; index < mentorArray.length - 1; index++) {
-      newMentor[index] = {
-        label: mentorArray[index + 1],
-        value: index + 1,
-      };
+  const DIAS = [
+    'Lunes',
+    'Martes',
+    'Miercoles',
+    'Jueves',
+    'Viernes',
+    'Sabado',
+    'Domingo',
+  ];
+
+const getHours = (day) => {
+    const mentory = mentoringTypes.mentoring_types.find(
+      (item) => item.name == later
+    );
+    const mentors = mentory.mentors.find((item) => {
+      return item.name == mentorSelected;
+    });
+    const availability = mentors.availability.find((item) => item.day == day)
+    setInitialHour(availability.start_hour);
+    setFinalHour(availability.final_hour);
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    let day = currentDate.toISOString();
+    let dates = day.slice(0, 10);
+    let hour = currentDate.toLocaleTimeString();
+    let dia = currentDate.getDay();
+    if (diaDisponible == DIAS[dia - 1]) {
+      setDay(dates);
+      if(initialHour <= hour && hour <= finalHour){
+        setTime(hour);
+      }else{
+        Alert.alert('Coloca el la hora disponible del mentor');
+      }
+      
+    } else {
+      Alert.alert('Coloca el dia disponible del mentor que seleccionaste');
     }
-    setMentores([...newMentor]);
   };
 
-  const renderAvailability = () => {
-    const newAvailability = [];
-    for (let index = 0; index < dateArray.length - 1; index++) {
-      newAvailability[index] = {
-        label: dateArray[index + 1],
-        value: dateArray[index + 1],
-      };
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      setToken(token);
+    } catch (e) {}
+  };
+
+  const _Login = async () => {
+    console.log("mentor id: ",mentorId);
+    console.log("mentoring id: ",mentoringId);
+    console.log(day);
+    console.log(time);
+    console.log(title);
+    console.log(description);
+    console.log(token)
+    try {
+      const { data } = await axios.post(
+      'https://api.soniapp.hackademy.lat/events/mentoring/',
+      params,{
+      headers:{
+        'Authorization': `Token ${token}`,
+      },
+      body: {
+        mentor: mentorId,
+      mentoring_type: mentoringId,
+      event: {
+        date,
+        time,
+        title,
+        duration: "01:30:00"
+      }
+      }
+      }
+    );
+    console.log(data);
+    Alert.alert("Se ha agendado su cita de "+title+" el dia "+day+" a las "+time+" horas, con el mentor "+mentorSelected)
+    } catch (error) {
+      console.log(error)
     }
-    setDate([...newAvailability]);
   };
-
-  const _Login = () => {
-  };
-
-  setEjemplo({
-    titulo: "este es un titulo",
-    mentoring: "React native",
-    mentor: "Luis",
-    date: "martes 25"
-  })
 
   return (
     <View style={styles.view}>
-      <Text>Selecciona la mentoria que deseas editar</Text>
+    <Text>Selecciona La mentoria que deseas modificar</Text>
       <RNPickerSelect //mentoring
-        onValueChange={(value) => console.log(value)}
-        items={id}
-        placeholder={ejemplo.titulo}
+        onValueChange={(value) => {
+          console.log(value);
+          // getMentor(value);
+        }}
+        items={idMentoring}
+        placeholder={{}}
         useNativeAndroidPickerStyle={false}
         style={{
           ...pickerSelectStyles,
@@ -217,7 +267,10 @@ const RequestMentory = ({ navigation }) => {
       <View paddingVertical={5} />
       <Text>Selecciona el tipo de mentoria</Text>
       <RNPickerSelect //mentoring
-        onValueChange={(value) => console.log(value)}
+        onValueChange={(value) => {
+          console.log(value);
+          getMentor(value);
+        }}
         items={items}
         placeholder={{}}
         useNativeAndroidPickerStyle={false}
@@ -233,33 +286,8 @@ const RequestMentory = ({ navigation }) => {
         }}
       />
       <View paddingVertical={5} />
-      <Text>Selecciona la habilidad</Text>
-      <RNPickerSelect //skill
-        onValueChange={(value) => {
-          console.log(value);
-          getMentor(value);
-        }}
-        items={[
-          { label: 'Backend', value: 'back' },
-          { label: 'Frontend', value: 'front' },
-          { label: 'Móvil', value: 'movil' },
-        ]}
-        placeholder={{}}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
-      <View paddingVertical={5} />
       <Text>Selecciona al mentor</Text>
-      <RNPickerSelect //Availability
+      <RNPickerSelect //Mentor
         onValueChange={(value) => {
           console.log(value);
           getAvailability(value);
@@ -280,11 +308,13 @@ const RequestMentory = ({ navigation }) => {
       />
       <View paddingVertical={5} />
       <Text>Selecciona el horario y el dia</Text>
-      <RNPickerSelect //date
+      <RNPickerSelect //availability
         onValueChange={(value) => {
           console.log(value);
+          getHours(value);
+          setDiaDisponible(value);
         }}
-        items={date}
+        items={availability}
         placeholder={{}}
         useNativeAndroidPickerStyle={false}
         style={{
@@ -297,6 +327,39 @@ const RequestMentory = ({ navigation }) => {
         Icon={() => {
           return <Ionicons name='md-arrow-down' size={24} color='gray' />;
         }}
+      />
+      <View style={{ marginTop: 12 }}>
+        <Button
+          onPress={showDatepicker}
+          title='Selecciona el Dia'
+          color='#00b7b8'
+          style={{ borderRadius: 5 }}
+        />
+      </View>
+      <View style={{ marginTop: 12 }}>
+        <Button
+          onPress={showTimepicker}
+          title='Selecciona la hora'
+          color='#00b7b8'
+          style={{ borderRadius: 5 }}
+        />
+      </View>
+      {show && (
+        <DateTimePicker
+          testID='dateTimePicker'
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display='default'
+          onChange={onChange}
+        />
+      )}
+      <TextInput
+        label='Descripcion (opcional)'
+        mode='outlined'
+        autoCapitalize='none'
+        autoCorrect={false}
+        onChangeText={setDescription}
       />
       <TouchableOpacity
         style={styles.bottonLogin}
@@ -319,6 +382,7 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: 'white',
+    padding: 10,
   },
   mentoringBox: {
     marginBottom: 5,
@@ -340,7 +404,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00b7b8',
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 35
+    marginTop: 35,
   },
   textoBotonLogin: {
     color: '#ffffff',
