@@ -16,21 +16,14 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const RequestMentory = ({ navigation }) => {
-  const _format = 'YYYY-MM-DD';
-
   const [loading, setLoading] = useState(false);
   const [mentoringTypes, setMentoringTypes] = useState({
     mentoring_types: [],
   });
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedType, setSelectedType] = useState('');
   const [diaDisponible, setDiaDisponible] = useState('');
-
   const [later, setLater] = useState('');
-
-  const [selectedLanguage, setSelectedLanguage] = useState();
-  const [typeArray, setTypeArray] = useState([]);
   const [items, setItems] = useState([]);
   const [mentores, setMentores] = useState([]);
   const [availability, setAvailability] = useState([]);
@@ -43,12 +36,6 @@ const RequestMentory = ({ navigation }) => {
 
   const [initialHour, setInitialHour] = useState('');
   const [finalHour, setFinalHour] = useState('');
-
-  const [mentorArray, setMentorArray] = useState([]);
-  const [dateArray, setDateArray] = useState([]);
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [mentorSelected, setMentorSelected] = useState('');
   const [mentorId, setMentorId] = useState('');
   const [mentoringId, setMentoringId] = useState('');
@@ -137,10 +124,10 @@ const RequestMentory = ({ navigation }) => {
   const DIAS = [
     'Lunes',
     'Martes',
-    'Miercoles',
+    'Miércoles',
     'Jueves',
     'Viernes',
-    'Sabado',
+    'Sábado',
     'Domingo',
   ];
 
@@ -196,69 +183,47 @@ const RequestMentory = ({ navigation }) => {
     } catch (e) {}
   };
 
-  const _Login = async () => {
-    console.log('mentor id: ', mentorId);
-    console.log('mentoring id: ', mentoringId);
-    console.log(day);
-    console.log(time);
-    console.log(title);
-    console.log(description);
-    console.log(token);
-    let datas = {
+  const loadData = async () => {
+    const options = {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Token ${token}`,
+      },
+    };
+    const datas = {
       mentor: mentorId,
       mentoring_type: mentoringId,
       event: {
         date: day,
-        time: time,
-        title: title,
-        duration: '00:10:00',
+        time,
+        title,
+        duration: '01:00:00',
       },
-    };
-    let headers = {
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
-        "Authorization": `Token ${token}`,
-      },
+      observation: description,
     };
     try {
       const { data } = await axios.post(
         'https://api.soniapp.hackademy.lat/events/mentoring/',
-        {
-          //   mentor: mentorId,
-          // mentoring_type: mentoringId,
-          // event: {
-          //   date,
-          //   time,
-          //   title,
-          //   duration: "01:30:00"
-          // }
-          mentor: 2,
-          mentoring_type: 1,
-          event: {
-            date: '2021-11-22',
-            time: '17:21:00',
-            title: 'Prueba 4',
-            duration: '00:10:00',
-          },
-        },
-        {
-          headers: headers,
-        }
+        datas,
+        options
       );
       console.log(data);
-      Alert.alert(
-        'Se ha agendado su cita de ' +
+      Alert.alert("Mentoria Agendada",
+        'Se ha agendado su mentoria de ' +
           title +
           ' el dia ' +
           day +
           ' a las ' +
           time +
-          ' horas, con el mentor ' +
+          ' horas,\n con el mentor ' +
           mentorSelected
       );
     } catch (error) {
-      console.log(error);
+      const { response } = error;
+      const { request, ...errorObject } = response; // take everything but 'request'
+      console.log(errorObject.data.error);
+      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:"Selecciona bien los datos");
     }
   };
 
@@ -373,7 +338,7 @@ const RequestMentory = ({ navigation }) => {
       <TouchableOpacity
         style={styles.bottonLogin}
         onPress={() => {
-          _Login();
+          loadData();
         }}
         disabled={loading}
       >

@@ -16,22 +16,20 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const RequestMentory = ({ navigation }) => {
-  const _format = 'YYYY-MM-DD';
-
   const [loading, setLoading] = useState(false);
   const [mentoringTypes, setMentoringTypes] = useState({
     mentoring_types: [],
   });
+  const [editMentoringTypes, setEditMentoringTypes] = useState({
+    mentorships: [],
+  });
   const [title, setTitle] = useState('');
-  const [idMentoring, setIdMentoring] = useState('');
+  const [idMentoring, setIdMentoring] = useState([]);
+  const [selectedIdMentoring, setSelectedIdMentoring] = useState([]);
   const [description, setDescription] = useState('');
-  const [selectedType, setSelectedType] = useState('');
   const [diaDisponible, setDiaDisponible] = useState('');
 
   const [later, setLater] = useState('');
-
-  const [selectedLanguage, setSelectedLanguage] = useState();
-  const [typeArray, setTypeArray] = useState([]);
   const [items, setItems] = useState([]);
   const [mentores, setMentores] = useState([]);
   const [availability, setAvailability] = useState([]);
@@ -41,19 +39,17 @@ const RequestMentory = ({ navigation }) => {
   const [day, setDay] = useState('');
   const [time, setTime] = useState('');
   const [token, setToken] = useState('');
-  
+
   const [initialHour, setInitialHour] = useState('');
   const [finalHour, setFinalHour] = useState('');
-
-  const [mentorArray, setMentorArray] = useState([]);
-  const [dateArray, setDateArray] = useState([]);
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [mentorSelected, setMentorSelected] = useState('');
   const [mentorId, setMentorId] = useState('');
   const [mentoringId, setMentoringId] = useState('');
-
+  const [yet, setYet] = useState(false)
+  const [temporalMentoring,setTemporalMentoring]=useState('')
+  const [temporalMentor,setTemporalMentor]=useState('')
+  const [idMentoringData, setIdMentoringData] = useState('')
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -67,8 +63,12 @@ const RequestMentory = ({ navigation }) => {
 
   useEffect(() => {
     filterType();
-    console.log('Listo');
+    getIds();
   }, [mentoringTypes]);
+
+  useEffect(() => {
+    filterId();
+  }, [editMentoringTypes]);
 
   const getMentoring = async () => {
     try {
@@ -76,9 +76,27 @@ const RequestMentory = ({ navigation }) => {
         'https://api.soniapp.hackademy.lat/events/mentoringdata/'
       );
       setMentoringTypes({ mentoring_types: data.mentoring_types });
-      // console.log(mentoringTypes.mentoring_types);
     } catch (error) {
       console.log(error + ' ha salido mal sin aprametros');
+    }
+  };
+
+  const getIds = async () => {
+    const options = {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Token ${token}`,
+      },
+    };
+    try {
+      const { data } = await axios.get(
+        'https://api.soniapp.hackademy.lat/events/mentoring/requested/',
+        options
+      );
+      setEditMentoringTypes({ mentorships: data.mentorships });
+    } catch (error) {
+      console.log(error + ' ha salido mal en los ids');
     }
   };
 
@@ -88,7 +106,6 @@ const RequestMentory = ({ navigation }) => {
       (item) => item.id == id
     );
     setLater(mentory.name);
-    console.log(later)
     const mentors = mentory.mentors.map((item) => {
       return { label: item.name, value: item.id };
     });
@@ -136,6 +153,50 @@ const RequestMentory = ({ navigation }) => {
     setItems(newTypes);
   };
 
+  const filterId = () => {
+    const newId = []; //hacer cambio en el for, poner que analice las fechas y no el id
+    let control = 0;
+    for (
+      let index = 1;
+      index <= 100;
+      index++
+    ) {
+      const idMentoring = editMentoringTypes.mentorships.find(
+        (item) => item.id == index
+      );
+      if(idMentoring !== undefined && idMentoring.status == "solicitada"){
+        newId[control] = {
+        label: idMentoring.event.title,
+        value: idMentoring.id,
+      };
+      control++;
+      }
+    }
+    setIdMentoring(newId);
+  };
+
+  const getMentoringId = async(id) =>{
+    const {data} = await axios.get(`https://api.soniapp.hackademy.lat/events/mentoringtype/id/${id}`)
+    setTemporalMentoring(data.name);
+  } 
+  const getMentorId = async(id) =>{
+    const {data} = await axios.get(`https://api.soniapp.hackademy.lat/users/mentor/id/${id}`)
+    setTemporalMentor(data.name);
+  } 
+
+  const selectedMentoring = async(id) =>{
+    const idMentorings = editMentoringTypes.mentorships.find(
+      (item) => item.id == id
+    );
+    console.log("Mentoria seleccionada: ",idMentorings)
+    setSelectedIdMentoring(idMentorings);
+    setYet(true);
+    getMentoringId(idMentorings.mentoring_type)
+    getMentorId(idMentorings.mentor)
+    setTitle(idMentorings.event.title)
+    setIdMentoringData(id);
+  }
+
   const DIAS = [
     'Lunes',
     'Martes',
@@ -146,14 +207,14 @@ const RequestMentory = ({ navigation }) => {
     'Domingo',
   ];
 
-const getHours = (day) => {
+  const getHours = (day) => {
     const mentory = mentoringTypes.mentoring_types.find(
       (item) => item.name == later
     );
     const mentors = mentory.mentors.find((item) => {
       return item.name == mentorSelected;
     });
-    const availability = mentors.availability.find((item) => item.day == day)
+    const availability = mentors.availability.find((item) => item.day == day);
     setInitialHour(availability.start_hour);
     setFinalHour(availability.final_hour);
   };
@@ -168,12 +229,11 @@ const getHours = (day) => {
     let dia = currentDate.getDay();
     if (diaDisponible == DIAS[dia - 1]) {
       setDay(dates);
-      if(initialHour <= hour && hour <= finalHour){
+      if (initialHour <= hour && hour <= finalHour) {
         setTime(hour);
-      }else{
+      } else {
         Alert.alert('Coloca el la hora disponible del mentor');
       }
-      
     } else {
       Alert.alert('Coloca el dia disponible del mentor que seleccionaste');
     }
@@ -199,49 +259,67 @@ const getHours = (day) => {
     } catch (e) {}
   };
 
-  const _Login = async () => {
-    console.log("mentor id: ",mentorId);
-    console.log("mentoring id: ",mentoringId);
+  const loadData = async () => {
+    console.log('mentor id: ', mentorId);
+    console.log('mentoring id: ', mentoringId);
     console.log(day);
     console.log(time);
     console.log(title);
     console.log(description);
-    console.log(token)
-    try {
-      const { data } = await axios.post(
-      'https://api.soniapp.hackademy.lat/events/mentoring/',
-      params,{
-      headers:{
-        'Authorization': `Token ${token}`,
+    console.log(token);
+    const options = { 
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Token ${token}`,
       },
-      body: {
-        mentor: mentorId,
+    };
+    const datas = {
+      mentor: mentorId,
       mentoring_type: mentoringId,
       event: {
-        date,
+        date: day,
         time,
         title,
-        duration: "01:30:00"
-      }
-      }
-      }
-    );
-    console.log(data);
-    Alert.alert("Se ha agendado su cita de "+title+" el dia "+day+" a las "+time+" horas, con el mentor "+mentorSelected)
+        duration: '01:00:00',
+      },
+      observation: description,
+    };
+    try {
+      const { data } = await axios.post(
+        `https://api.soniapp.hackademy.lat/events/mentoring/edit/${idMentoringData}`,
+        datas,
+        options
+      );
+      console.log(data);
+      Alert.alert("Mentoria Editada Exitosamente",
+        'Se ha modificado su mentoria a: ' +
+          title +
+          ' el dia ' +
+          day +
+          ' a las ' +
+          time +
+          ' horas,\n con el mentor ' +
+          mentorSelected
+      );
     } catch (error) {
-      console.log(error)
+      const { response } = error;
+      const { request, ...errorObject } = response; // take everything but 'request'
+      console.log(errorObject.data.error);
+      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:error);
     }
   };
 
   return (
     <View style={styles.view}>
-    <Text>Selecciona La mentoria que deseas modificar</Text>
+      <Text>Selecciona La mentoria que deseas modificar</Text>
       <RNPickerSelect //mentoring
         onValueChange={(value) => {
           console.log(value);
-          // getMentor(value);
+          selectedMentoring(value);
         }}
         items={idMentoring}
+        // placeholder={yet?{ label: 'Selecciona la mentoria', value: null }:{ label: 'mentoria 1', value: 1 }}
         placeholder={{}}
         useNativeAndroidPickerStyle={false}
         style={{
@@ -263,6 +341,7 @@ const getHours = (day) => {
         autoCapitalize='none'
         autoCorrect={false}
         onChangeText={setTitle}
+        value={title}
       />
       <View paddingVertical={5} />
       <Text>Selecciona el tipo de mentoria</Text>
@@ -272,7 +351,7 @@ const getHours = (day) => {
           getMentor(value);
         }}
         items={items}
-        placeholder={{}}
+        placeholder={yet?{ label: temporalMentoring, value: selectedIdMentoring.mentoring_type }:{}}
         useNativeAndroidPickerStyle={false}
         style={{
           ...pickerSelectStyles,
@@ -293,6 +372,7 @@ const getHours = (day) => {
           getAvailability(value);
         }}
         items={mentores}
+        // placeholder={yet?{ label: temporalMentor, value: selectedIdMentoring.mentor }:{}}
         placeholder={{}}
         useNativeAndroidPickerStyle={false}
         style={{
@@ -364,12 +444,12 @@ const getHours = (day) => {
       <TouchableOpacity
         style={styles.bottonLogin}
         onPress={() => {
-          _Login();
+          loadData();
         }}
         disabled={loading}
       >
         <Text style={styles.textoBotonLogin}>
-          {loading ? 'Cargando...' : 'Entrar'}
+          {loading ? 'Cargando...' : 'Editar Mentoria'}
         </Text>
       </TouchableOpacity>
     </View>

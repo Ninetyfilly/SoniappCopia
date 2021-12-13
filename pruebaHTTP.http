@@ -1,17 +1,3 @@
-POST https://api.soniapp.hackademy.lat/events/mentoring/
+GET http://api.soniapp.hackademy.lat/events/mentoring/edit/id_de_la_mentoria/
 content-Type: application/json
 
-Headers:{
-    "Authorization": "Token "+"457c50428bcec04b636c6cb5d6fded3fab50397c",
-}
-Body: {
-        {
-    "mentor":2,
-    "mentoring_type": 1,
-    "event":{
-    "date": "2021-11-22",
-    "time": "17:21:00",
-    "title": "Prueba 4",
-    "duration": "00:10:00"
-    }
-}
