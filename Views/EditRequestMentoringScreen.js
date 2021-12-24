@@ -200,10 +200,10 @@ const RequestMentory = ({ navigation }) => {
   const DIAS = [
     'Lunes',
     'Martes',
-    'Miercoles',
+    'Miércoles',
     'Jueves',
     'Viernes',
-    'Sabado',
+    'Sábado',
     'Domingo',
   ];
 
@@ -259,6 +259,58 @@ const RequestMentory = ({ navigation }) => {
     } catch (e) {}
   };
 
+  // const loadData = async () => {
+  //   console.log('mentor id: ', mentorId);
+  //   console.log('mentoring id: ', mentoringId);
+  //   console.log(day);
+  //   console.log(time);
+  //   console.log(title);
+  //   console.log(description);
+  //   console.log(token);
+  //   const options = { 
+  //     headers: {
+  //       'Content-Type': 'application/json;charset=UTF-8',
+  //       'Access-Control-Allow-Origin': '*',
+  //       Authorization: `Token ${token}`,
+  //     },
+  //   };
+  //   const datas = {
+  //     mentor: mentorId,
+  //     mentoring_type: mentoringId,
+  //     event: {
+  //       date: day,
+  //       time,
+  //       title,
+  //       duration: '01:00:00',
+  //     },
+  //     observation: description,
+  //     status: "seleccionada",
+  //   };
+  //   try {
+  //     const { data } = await axios.post(
+  //       `https://api.soniapp.hackademy.lat/events/mentoring/edit/${idMentoringData}/`,
+  //       datas,
+  //       options
+  //     );
+  //     console.log(data);
+  //     Alert.alert("Mentoria Editada Exitosamente",
+  //       'Se ha modificado su mentoria a: ' +
+  //         title +
+  //         ' el dia ' +
+  //         day +
+  //         ' a las ' +
+  //         time +
+  //         ' horas,\n con el mentor ' +
+  //         mentorSelected
+  //     );
+  //   } catch (error) {
+  //     const { response } = error;
+  //     const { request, ...errorObject } = response; // take everything but 'request'
+  //     console.log(errorObject.data.error);
+  //     Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:error);
+  //   }
+  // };
+
   const loadData = async () => {
     console.log('mentor id: ', mentorId);
     console.log('mentoring id: ', mentoringId);
@@ -267,10 +319,11 @@ const RequestMentory = ({ navigation }) => {
     console.log(title);
     console.log(description);
     console.log(token);
-    const options = { 
+    console.log(idMentoringData);
+    const options = {
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
+        // 'Content-Type': 'application/json;charset=UTF-8',
+        // 'Access-Control-Allow-Origin': '*',
         Authorization: `Token ${token}`,
       },
     };
@@ -286,14 +339,14 @@ const RequestMentory = ({ navigation }) => {
       observation: description,
     };
     try {
-      const { data } = await axios.post(
-        `https://api.soniapp.hackademy.lat/events/mentoring/edit/${idMentoringData}`,
+      const { data } = await axios.put(
+        `https://api.soniapp.hackademy.lat/events/mentoring/edit/${idMentoringData}/`,
         datas,
         options
       );
       console.log(data);
-      Alert.alert("Mentoria Editada Exitosamente",
-        'Se ha modificado su mentoria a: ' +
+      Alert.alert("Mentoria Agendada",
+        'Se ha modificado su mentoria a ' +
           title +
           ' el dia ' +
           day +
@@ -306,9 +359,10 @@ const RequestMentory = ({ navigation }) => {
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
       console.log(errorObject.data.error);
-      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:error);
+      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:"Selecciona bien los datos");
     }
   };
+
 
   return (
     <View style={styles.view}>

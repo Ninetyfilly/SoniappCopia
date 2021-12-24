@@ -4,6 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import * as Linking from 'expo-linking';
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeScreen from '../Views/HomeScreen';
 import LoginScreen from '../Views/LoginScreen';
@@ -22,7 +25,8 @@ const LoginStacks = createStackNavigator();
 const MenuStacks = createMaterialBottomTabNavigator();
 const HamburguerStack = createDrawerNavigator();
 
-const LoginStackScreens = ({ navigation }) => {
+const MainStack = () => {
+  const LoginStackScreens = ({ navigation }) => {
   return (
     <LoginStacks.Navigator screenOptions={{ headerShown: false }}>
       <LoginStacks.Screen name='Login' component={LoginScreen} />
@@ -39,7 +43,7 @@ const LoginStackScreens = ({ navigation }) => {
   );
 };
 
-const HamburguerStackScreens = ({ navigation }) => {
+  const HamburguerStackScreens = ({ navigation }) => {
   return (
     <HamburguerStack.Navigator initialRouteName='Home'>
       <HamburguerStack.Screen name='Home' component={HomeScreen} />
@@ -55,7 +59,7 @@ const HamburguerStackScreens = ({ navigation }) => {
   );
 };
 
-const MenuStackScreens = ({ navigation }) => {
+  const MenuStackScreens = ({ navigation }) => {
   //para aplicar la hamburguesa checar react navigator drawer
   return (
     <MenuStacks.Navigator initialRouteName='Home' activeColor='#ffffff'>
@@ -107,10 +111,49 @@ const MenuStackScreens = ({ navigation }) => {
     </MenuStacks.Navigator>
   );
 };
+  const getToken = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    console.log(status);
+    if (status !== 'granted') {
+      return;
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+    return token;
+  };
 
-const MainStack = () => {
+  React.useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const notification = response.notification.request.content.data.notification;
+      // url?Linking.openURL(url):console.log("sin url");
+      console.log(notification)
+      if(notification)AsyncStorage.setItem('notification',notification);
+    });
+    return () => subscription.remove();
+  }, []);
+
+  React.useEffect(() => {
+    getToken();
+  }, []);
+
+  const config = {
+    screens:{
+      Notificaciones:"notification",
+      Home: "home",
+      Profile: "profile",
+      LoginScreen: "login",
+    }
+  }
+
+  const prefix = Linking.createURL('soniapp://soniapp')
+
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      linking={{
+        prefixes:[prefix],
+        config
+      }}
+    >
       <MainStacks.Navigator
         initialRouteName='AuthLoadingScreen'
         screenOptions={{ headerShown: false }}

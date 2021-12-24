@@ -12,6 +12,17 @@ import imageSoni from '../assets/SONIAPP.png';
 
 const HomeScreen = ({ navigation }) => {
 
+  const getNoti = async () => {
+      try {
+        const noti = await AsyncStorage.getItem('notification');
+        if (noti == true) {
+          await AsyncStorage.removeItem('notification');
+          navigation.navigate('Notificaciones');
+        }
+      } catch (e) {}
+    };
+
+  getNoti();
 
   const [user, setUser] = React.useState('');
 
