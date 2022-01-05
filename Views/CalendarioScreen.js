@@ -54,7 +54,6 @@ const CalendarioScreen = () => {
         .map((item) => item.type);
       const date = evento.eventos.filter((item) => item.date === strTime);
       let index = date.map((item) => item.date).indexOf(strTime);
-      console.log(index);
       if (index !== -1) {
         item[strTime] = [];
         let suceso = type.toString();
@@ -74,7 +73,6 @@ const CalendarioScreen = () => {
             : sesion;
         const markedDates = { [_selectedDay]: { dots: tipo } };
         setMarcas({ dias: { ...marcas.dias, ...markedDates } });
-        console.log(marcas);
       } else {
         item[strTime] = [];
       }
@@ -90,7 +88,7 @@ const CalendarioScreen = () => {
       <TouchableOpacity
         style={styles.item}
         onPress={() => {
-          Alert.alert('Oh, oprimiste el botón' + _today);
+          Alert.alert(item.name, _today);
         }}
       >
         <Card>
