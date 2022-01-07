@@ -11,6 +11,7 @@ import {
 import { Button, TextInput } from 'react-native-paper';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GLOBALS from '../Utils/Global';
 
 const RegisterScreen = ({ navigation }) => {
   const [correo, setCorreo] = React.useState('');
@@ -39,7 +40,7 @@ const RegisterScreen = ({ navigation }) => {
     } else {
       try {
         const { data } = await axios.post(
-          'https://api.soniapp.hackademy.lat/users/password-reset/',
+          `${GLOBALS.API}users/password-reset/`,
           {
             email: correo
           }

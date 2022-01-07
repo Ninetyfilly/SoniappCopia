@@ -11,11 +11,13 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GLOBALS from '../Utils/Global';
+
 
 const ProfileScreen = ({ navigation }) => {
   const [token, setToken] = React.useState('');
   const [events, setEvents] = React.useState('');
-  const [datas, setDatas] = React.useState({ mentorships: [] });
+  const [changue, setChangue] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState(null);
   
   React.useEffect(() => {
@@ -24,11 +26,7 @@ const ProfileScreen = ({ navigation }) => {
 
   React.useEffect(() => {
     getData();
-  }, [token]);
-
-  React.useEffect(() => {
-    filterData();
-  }, [datas]);
+  }, [token,changue]);
 
   const getToken = async () => {
     try {
@@ -40,53 +38,31 @@ const ProfileScreen = ({ navigation }) => {
   const getData = async () => {
     const options = {
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
         Authorization: `Token ${token}`,
       },
     };
     try {
       const { data } = await axios.get(
-        `https://api.soniapp.hackademy.lat/events/mentoring/retrieve/`,
+        `${GLOBALS.API}events/mentoring/retrieve/`,
         options
       );
       const dataFormateados = data.mentorships.map((item) => {
+        let descripcion =
+          item.observation !== null ? item.observation : 'Sin descripcion';
         return {
             id: item.id,
-            title: item.event.title
+            title: item.event.title,
+            date: item.event.date,
+            time: item.event.time,
+            observation: descripcion,
+            status: item.status,
           }
         }
       )
-      console.log(dataFormateados)
-      setDatas({ mentorships: data.mentorships });
-
+      setEvents(dataFormateados)
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const filterData = () => {
-    const newTypes = [];
-    let control = 0;
-    for (let index = 1; index <= /*datas.mentorships.length*/ 100; index++) {
-      const tempo = datas.mentorships.find((item) => item.id == index);
-      if (tempo) {
-        console.log(tempo)
-        let descripcion =
-          tempo.observation !== null ? tempo.observation : 'Sin descripcion';
-        newTypes[control] = {
-          id: tempo.id,
-          title: tempo.event.title,
-          date: tempo.event.date,
-          time: tempo.event.time,
-          observation: descripcion,
-          status: tempo.status,
-        };
-        control++;
-      }
-
-    }
-    setEvents(newTypes);
   };
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => {
@@ -95,6 +71,7 @@ const ProfileScreen = ({ navigation }) => {
         onPress={onPress}
         style={[styles.item, backgroundColor]}
       >
+        <Text style={[styles.state, textColor]}>{item.status}</Text>
         <Text style={[styles.title, textColor]}>{item.title}</Text>
         <Text style={[styles.title, textColor]}>Dia: {item.date}</Text>
         <Text style={[styles.title, textColor]}>Hora {item.time}</Text>
@@ -106,23 +83,28 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const mentoringResponse = async(response) => {
+    console.log(response)
     const options = {
       headers: {
-        // 'Content-Type': 'application/json;charset=UTF-8',
-        // 'Access-Control-Allow-Origin': '*',
         Authorization: `Token ${token}`,
       },
     };
     try {
       const { data } = await axios.put(
-        `https://api.soniapp.hackademy.lat/events/mentoring/response/${selectedId}/`,
+        `${GLOBALS.API}events/mentoring/response/${selectedId}/`,
         {response},
         options
       );
-      Alert.alert("Mentoria "+respónse,
+      Alert.alert("Mentoria "+response,
         'La mentoria ha sido '+response+' correctamente'
       );
+      if(!changue){
+        setChangue(true)
+      }else{
+        setChangue(false)
+      }
     } catch (error) {
+      console.log(error)
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
       console.log(errorObject.data.error);
@@ -130,9 +112,21 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
+  const backgroundColorChange = (status) =>{
+    if(status === 'solicitada'){
+      return 'grey';
+    }else if(status === 'confirmada'){
+      return '#00b7b8';
+    }else if(status === 'finalizada'){
+      return 'black';
+    }else{
+      return '#cf3232';
+    }
+  }
+
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? '#b414c9' : item.status === 'solicitada'? 'grey' : item.status === 'confirmada'? '#00b7b8' : item.status === 'finalizada'?'black':'#cf3232';
-    const color = item.id === selectedId ? 'white' : item.status === 'solicitada'? 'black' : 'white';
+    const backgroundColor = backgroundColorChange(item.status);
+    const color = item.status === 'solicitada'? 'black' : 'white';
     if (item.status == 'solicitada') {
       return (
         <Item
@@ -213,5 +207,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
+  },
+  state: {
+    fontSize: 20,
+    alignSelf: 'flex-end',
+
   },
 });

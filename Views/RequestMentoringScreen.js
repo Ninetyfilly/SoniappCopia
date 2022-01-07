@@ -14,6 +14,7 @@ import axios from 'axios';
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import GLOBALS from '../Utils/Global';
 
 const RequestMentory = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -58,7 +59,7 @@ const RequestMentory = ({ navigation }) => {
   const getMentoring = async () => {
     try {
       const { data } = await axios.get(
-        'https://api.soniapp.hackademy.lat/events/mentoringdata/'
+        `${GLOBALS.API}events/mentoringdata/`
       );
       setMentoringTypes({ mentoring_types: data.mentoring_types });
       // console.log(mentoringTypes.mentoring_types);
@@ -204,7 +205,7 @@ const RequestMentory = ({ navigation }) => {
     };
     try {
       const { data } = await axios.post(
-        'https://api.soniapp.hackademy.lat/events/mentoring/',
+        `${GLOBALS.API}events/mentoring/`,
         datas,
         options
       );

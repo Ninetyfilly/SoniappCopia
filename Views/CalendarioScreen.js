@@ -4,6 +4,7 @@ import { Agenda } from 'react-native-calendars';
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const moment = require('moment');
+import GLOBALS from '../Utils/Global';
 
 const CalendarioScreen = () => {
   const _format = 'YYYY-MM-DD';
@@ -27,7 +28,7 @@ const CalendarioScreen = () => {
     const getEventos = async () => {
       const userToken = await AsyncStorage.getItem('userToken');
       try {
-        await fetch('https://api.soniapp.hackademy.lat/events/event/')
+        await fetch(`${GLOBALS.API}events/event/`)
           .then((response) => response.json())
           .then((responseJson) => {
             setEvento({ eventos: responseJson.eventos });

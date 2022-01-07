@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import imageSoni from '../assets/SONIAPP.png';
 import { Button } from 'react-native-paper';
 import axios from 'axios';
+import GLOBALS from '../Utils/Global';
 
 const LoginScreen = ({ navigation }) => {
   const [user, setUser] = React.useState('');
@@ -23,6 +24,8 @@ const LoginScreen = ({ navigation }) => {
   const [shown, setShown] = React.useState(false);
   const [ojo, setOjo] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [phoneToken, setPhoneToken] = React.useState('');
+
 
   const image = {
     uri: 'https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png',
@@ -41,8 +44,9 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-
   _Login = async () => {
+    const tokenP = await AsyncStorage.getItem('phoneToken');
+    setPhoneToken(tokenP);
     setLoading(true);
     if (user == '') {
       setLoading(false);
@@ -53,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
     } else {
       try {
         const { data } = await axios.post(
-          'https://api.soniapp.hackademy.lat/users/login/',
+          `${GLOBALS.API}users/login/`,
           {
             email: user,
             password

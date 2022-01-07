@@ -14,6 +14,7 @@ import axios from 'axios';
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import GLOBALS from '../Utils/Global';
 
 const RequestMentory = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -46,10 +47,10 @@ const RequestMentory = ({ navigation }) => {
   const [mentorSelected, setMentorSelected] = useState('');
   const [mentorId, setMentorId] = useState('');
   const [mentoringId, setMentoringId] = useState('');
-  const [yet, setYet] = useState(false)
-  const [temporalMentoring,setTemporalMentoring]=useState('')
-  const [temporalMentor,setTemporalMentor]=useState('')
-  const [idMentoringData, setIdMentoringData] = useState('')
+  const [yet, setYet] = useState(false);
+  const [temporalMentoring, setTemporalMentoring] = useState('');
+  const [temporalMentor, setTemporalMentor] = useState('');
+  const [idMentoringData, setIdMentoringData] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -72,9 +73,7 @@ const RequestMentory = ({ navigation }) => {
 
   const getMentoring = async () => {
     try {
-      const { data } = await axios.get(
-        'https://api.soniapp.hackademy.lat/events/mentoringdata/'
-      );
+      const { data } = await axios.get(`${GLOBALS.API}events/mentoringdata/`);
       setMentoringTypes({ mentoring_types: data.mentoring_types });
     } catch (error) {
       console.log(error + ' ha salido mal sin aprametros');
@@ -84,14 +83,12 @@ const RequestMentory = ({ navigation }) => {
   const getIds = async () => {
     const options = {
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
         Authorization: `Token ${token}`,
       },
     };
     try {
       const { data } = await axios.get(
-        'https://api.soniapp.hackademy.lat/events/mentoring/requested/',
+        `${GLOBALS.API}events/mentoring/requested/`,
         options
       );
       setEditMentoringTypes({ mentorships: data.mentorships });
@@ -154,48 +151,47 @@ const RequestMentory = ({ navigation }) => {
   };
 
   const filterId = () => {
-    const newId = []; //hacer cambio en el for, poner que analice las fechas y no el id
-    let control = 0;
-    for (
-      let index = 1;
-      index <= 100;
-      index++
-    ) {
-      const idMentoring = editMentoringTypes.mentorships.find(
-        (item) => item.id == index
-      );
-      if(idMentoring !== undefined && idMentoring.status == "solicitada"){
-        newId[control] = {
-        label: idMentoring.event.title,
-        value: idMentoring.id,
+    const dataFormateados = editMentoringTypes.mentorships.map((item) => {
+      return {
+        label: item.event.title,
+        value: item.id,
       };
-      control++;
+    });
+    const dataOrganize = dataFormateados.sort(function (a, b) {
+      if (a.value > b.value) {
+        return 1;
       }
-    }
-    setIdMentoring(newId);
+      if (a.value < b.value) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
+    setIdMentoring(dataOrganize);
+    console.log(editMentoringTypes);
   };
 
-  const getMentoringId = async(id) =>{
-    const {data} = await axios.get(`https://api.soniapp.hackademy.lat/events/mentoringtype/id/${id}`)
+  const getMentoringId = async (id) => {
+    const { data } = await axios.get(`${GLOBALS.API}events/mentoringtype/id/${id}`);
     setTemporalMentoring(data.name);
-  } 
-  const getMentorId = async(id) =>{
-    const {data} = await axios.get(`https://api.soniapp.hackademy.lat/users/mentor/id/${id}`)
+  };
+  const getMentorId = async (id) => {
+    const { data } = await axios.get(`${GLOBALS.API}users/mentor/id/${id}`);
     setTemporalMentor(data.name);
-  } 
+  };
 
-  const selectedMentoring = async(id) =>{
+  const selectedMentoring = async (id) => {
     const idMentorings = editMentoringTypes.mentorships.find(
       (item) => item.id == id
     );
-    console.log("Mentoria seleccionada: ",idMentorings)
+    console.log('Mentoria seleccionada: ', idMentorings);
     setSelectedIdMentoring(idMentorings);
     setYet(true);
-    getMentoringId(idMentorings.mentoring_type)
-    getMentorId(idMentorings.mentor)
-    setTitle(idMentorings.event.title)
+    getMentoringId(idMentorings.mentoring_type);
+    getMentorId(idMentorings.mentor);
+    setTitle(idMentorings.event.title);
     setIdMentoringData(id);
-  }
+  };
 
   const DIAS = [
     'Lunes',
@@ -259,71 +255,9 @@ const RequestMentory = ({ navigation }) => {
     } catch (e) {}
   };
 
-  // const loadData = async () => {
-  //   console.log('mentor id: ', mentorId);
-  //   console.log('mentoring id: ', mentoringId);
-  //   console.log(day);
-  //   console.log(time);
-  //   console.log(title);
-  //   console.log(description);
-  //   console.log(token);
-  //   const options = { 
-  //     headers: {
-  //       'Content-Type': 'application/json;charset=UTF-8',
-  //       'Access-Control-Allow-Origin': '*',
-  //       Authorization: `Token ${token}`,
-  //     },
-  //   };
-  //   const datas = {
-  //     mentor: mentorId,
-  //     mentoring_type: mentoringId,
-  //     event: {
-  //       date: day,
-  //       time,
-  //       title,
-  //       duration: '01:00:00',
-  //     },
-  //     observation: description,
-  //     status: "seleccionada",
-  //   };
-  //   try {
-  //     const { data } = await axios.post(
-  //       `https://api.soniapp.hackademy.lat/events/mentoring/edit/${idMentoringData}/`,
-  //       datas,
-  //       options
-  //     );
-  //     console.log(data);
-  //     Alert.alert("Mentoria Editada Exitosamente",
-  //       'Se ha modificado su mentoria a: ' +
-  //         title +
-  //         ' el dia ' +
-  //         day +
-  //         ' a las ' +
-  //         time +
-  //         ' horas,\n con el mentor ' +
-  //         mentorSelected
-  //     );
-  //   } catch (error) {
-  //     const { response } = error;
-  //     const { request, ...errorObject } = response; // take everything but 'request'
-  //     console.log(errorObject.data.error);
-  //     Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:error);
-  //   }
-  // };
-
   const loadData = async () => {
-    console.log('mentor id: ', mentorId);
-    console.log('mentoring id: ', mentoringId);
-    console.log(day);
-    console.log(time);
-    console.log(title);
-    console.log(description);
-    console.log(token);
-    console.log(idMentoringData);
     const options = {
       headers: {
-        // 'Content-Type': 'application/json;charset=UTF-8',
-        // 'Access-Control-Allow-Origin': '*',
         Authorization: `Token ${token}`,
       },
     };
@@ -340,12 +274,13 @@ const RequestMentory = ({ navigation }) => {
     };
     try {
       const { data } = await axios.put(
-        `https://api.soniapp.hackademy.lat/events/mentoring/edit/${idMentoringData}/`,
+        `${GLOBALS.API}events/mentoring/edit/${idMentoringData}/`,
         datas,
         options
       );
       console.log(data);
-      Alert.alert("Mentoria Agendada",
+      Alert.alert(
+        'Mentoria Agendada',
         'Se ha modificado su mentoria a ' +
           title +
           ' el dia ' +
@@ -359,10 +294,14 @@ const RequestMentory = ({ navigation }) => {
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
       console.log(errorObject.data.error);
-      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:"Selecciona bien los datos");
+      Alert.alert(
+        'Error',
+        errorObject.data.error !== undefined
+          ? errorObject.data.error
+          : 'Selecciona bien los datos'
+      );
     }
   };
-
 
   return (
     <View style={styles.view}>
@@ -373,7 +312,6 @@ const RequestMentory = ({ navigation }) => {
           selectedMentoring(value);
         }}
         items={idMentoring}
-        // placeholder={yet?{ label: 'Selecciona la mentoria', value: null }:{ label: 'mentoria 1', value: 1 }}
         placeholder={{}}
         useNativeAndroidPickerStyle={false}
         style={{
@@ -405,7 +343,14 @@ const RequestMentory = ({ navigation }) => {
           getMentor(value);
         }}
         items={items}
-        placeholder={yet?{ label: temporalMentoring, value: selectedIdMentoring.mentoring_type }:{}}
+        placeholder={
+          yet
+            ? {
+                label: temporalMentoring,
+                value: selectedIdMentoring.mentoring_type,
+              }
+            : {}
+        }
         useNativeAndroidPickerStyle={false}
         style={{
           ...pickerSelectStyles,

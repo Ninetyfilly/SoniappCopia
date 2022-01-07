@@ -16,6 +16,7 @@ import { validatePassword } from '../Utils/Helpers';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import GLOBALS from '../Utils/Global';
 
 const RegisterScreen = ({ navigation }) => {
   //hokks
@@ -98,7 +99,7 @@ const RegisterScreen = ({ navigation }) => {
     } else {
       try {
         const { data } = await axios.patch(
-          'https://api.soniapp.hackademy.lat/users/password-reset/',
+          `${GLOBALS.API}users/password-reset/`,
           {
             uidb64,
             token,

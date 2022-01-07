@@ -117,9 +117,12 @@ const MainStack = () => {
     if (status !== 'granted') {
       return;
     }
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-    return token;
+    const phoneToken = (await Notifications.getExpoPushTokenAsync()).data;
+    if(phoneToken !== undefined){
+      AsyncStorage.setItem('phoneToken',phoneToken);
+      console.log(phoneToken);
+    }
+    return phoneToken;
   };
 
   React.useEffect(() => {
