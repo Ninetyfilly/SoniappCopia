@@ -13,12 +13,16 @@ import LoginScreen from '../Views/LoginScreen';
 import ProfileScreen from '../Views/ProfileScreen';
 import RecuperarScreen from '../Views/RecuperarScreen';
 import AuthLoadingScreen from '../Views/AuthLoadingScreen';
+import LogOutScreen from '../Views/LogOutScreen';
+
 import CalendarioScreen from '../Views/CalendarioScreen';
 import NotificacionScreen from '../Views/NotificacionScreen';
 import RegistrarContraScreen from '../Views/RegistrarContraScreen';
 import VerificateScreen from '../Views/VerificateScreen';
 import RequestMentoringScreen from '../Views/RequestMentoringScreen';
 import EditRequestMentoringScreen from '../Views/EditRequestMentoringScreen';
+import EventListScreen from '../Views/EventListScreen';
+
 
 const MainStacks = createStackNavigator();
 const LoginStacks = createStackNavigator();
@@ -55,6 +59,7 @@ const MainStack = () => {
         name='Editar Mentoria Solicitada'
         component={EditRequestMentoringScreen}
       />
+      <HamburguerStack.Screen name='Ver Listado de Eventos' component={EventListScreen} />
     </HamburguerStack.Navigator>
   );
 };
@@ -62,7 +67,7 @@ const MainStack = () => {
   const MenuStackScreens = ({ navigation }) => {
   //para aplicar la hamburguesa checar react navigator drawer
   return (
-    <MenuStacks.Navigator initialRouteName='Home' activeColor='#ffffff'>
+    <MenuStacks.Navigator initialRouteName='Home' activeColor='#000000'>
       <MenuStacks.Screen
         name='Inicio'
         component={HamburguerStackScreens}
@@ -71,7 +76,7 @@ const MainStack = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='home' color={color} size={26} />
           ),
-          tabBarColor: '#00b7b8',
+          tabBarColor: '#c4d043',
         }}
       />
 
@@ -83,7 +88,7 @@ const MainStack = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='account' color={color} size={26} />
           ),
-          tabBarColor: '#BC31EA',
+          tabBarColor: '#585490',
         }}
       />
       <MenuStacks.Screen
@@ -94,7 +99,7 @@ const MainStack = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='calendar' color={color} size={26} />
           ),
-          tabBarColor: '#00b7b8',
+          tabBarColor: '#c4d043',
         }}
       />
       <MenuStacks.Screen
@@ -105,7 +110,7 @@ const MainStack = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name='bell' color={color} size={26} />
           ),
-          tabBarColor: '#BC31EA',
+          tabBarColor: '#585490',
         }}
       />
     </MenuStacks.Navigator>
@@ -165,6 +170,10 @@ const MainStack = () => {
         <MainStacks.Screen
           name='AuthLoadingScreen'
           component={AuthLoadingScreen}
+        />
+        <MainStacks.Screen
+          name='LogOutScreen'
+          component={LogOutScreen}
         />
         <MainStacks.Screen name='HomeScreen' component={MenuStackScreens} />
       </MainStacks.Navigator>

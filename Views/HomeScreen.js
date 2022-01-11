@@ -6,11 +6,13 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import imageSoni from '../assets/SONIAPP.png';
 
 const HomeScreen = ({ navigation }) => {
+  const [loading, setLoading] = React.useState(false);
 
   const getNoti = async () => {
       try {
@@ -35,11 +37,9 @@ const HomeScreen = ({ navigation }) => {
 
   _getUser();
 
-  const _deleteToken = async () => {
-    try {
-      await AsyncStorage.removeItem('userToken');
-      navigation.navigate('LoginScreen');
-    } catch (e) {}
+  const logOut = async () => {
+      setLoading(true)
+      navigation.navigate('LogOutScreen');
   };
 
   const image = {
@@ -53,15 +53,18 @@ const HomeScreen = ({ navigation }) => {
         style={styles.imageHackademy}
         resizeMode='cover'
       >
-        <Image source={imageSoni} style={styles.imageSonia} />
       </ImageBackground>
-      <Button
-        title={'Cerrar Sesion'}
-        style={styles.logOut}
-        onPress={() => {
-          _deleteToken();
-        }}
-      ></Button>
+      <TouchableOpacity
+          style={styles.logOut}
+          onPress={() => {
+            logOut();
+          }}
+          disabled={loading}
+        >
+          <Text style={styles.textLogOut}>
+            {loading ? 'Cargando...' : 'Cerrar Sesion'}
+          </Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -73,21 +76,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  imageSonia: {
-    height: 200,
-    width: 250,
-    marginLeft: 5,
-  },
   imageHackademy: {
-    flex: 1,
     justifyContent: 'center',
     height: 250,
     width: 250,
   },
   logOut: {
-    flex: 1,
-    justifyContent: 'center',
-    height: 250,
-    width: 250,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#585490',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginVertical: 8,
+  },
+  textLogOut: {
+    color: '#ffffff',
+    fontFamily: ('Poppins', 'sans-serif'),
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });

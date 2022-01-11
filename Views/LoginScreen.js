@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
   const [shown, setShown] = React.useState(false);
   const [ojo, setOjo] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [phoneToken, setPhoneToken] = React.useState('');
+  // const [phoneToken, setPhoneToken] = React.useState('');
 
 
   const image = {
@@ -46,7 +46,7 @@ const LoginScreen = ({ navigation }) => {
 
   _Login = async () => {
     const tokenP = await AsyncStorage.getItem('phoneToken');
-    setPhoneToken(tokenP);
+    // setPhoneToken(tokenP);
     setLoading(true);
     if (user == '') {
       setLoading(false);
@@ -59,8 +59,9 @@ const LoginScreen = ({ navigation }) => {
         const { data } = await axios.post(
           `${GLOBALS.API}users/login/`,
           {
-            email: user,
-            password
+            "email": user,
+            password,
+            "token-expo": tokenP, 
           }
         );
         console.log(data);
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#00b7b8',
+    backgroundColor: '#c4d043',
     paddingVertical: 10,
     borderRadius: 10,
   },
