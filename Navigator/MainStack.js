@@ -8,20 +8,20 @@ import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import HomeScreen from '../Views/HomeScreen';
-import LoginScreen from '../Views/LoginScreen';
-import ProfileScreen from '../Views/ProfileScreen';
-import RecuperarScreen from '../Views/RecuperarScreen';
-import AuthLoadingScreen from '../Views/AuthLoadingScreen';
-import LogOutScreen from '../Views/LogOutScreen';
+import HomeScreen from '../Views/Home/HomeScreen';
+import LoginScreen from '../Views/Login/LoginScreen';
+import ProfileScreen from '../Views/Profile/ProfileScreen';
+import RecuperarScreen from '../Views/Recover-password/RecuperarScreen';
+import AuthLoadingScreen from '../Views/Login/AuthLoadingScreen';
+import LogOutScreen from '../Views/Home/LogOutScreen';
 
-import CalendarioScreen from '../Views/CalendarioScreen';
-import NotificacionScreen from '../Views/NotificacionScreen';
-import RegistrarContraScreen from '../Views/RegistrarContraScreen';
-import VerificateScreen from '../Views/VerificateScreen';
-import RequestMentoringScreen from '../Views/RequestMentoringScreen';
-import EditRequestMentoringScreen from '../Views/EditRequestMentoringScreen';
-import EventListScreen from '../Views/EventListScreen';
+import CalendarioScreen from '../Views/Calendar/CalendarioScreen';
+import NotificacionScreen from '../Views/Notification/NotificacionScreen';
+import RegistrarContraScreen from '../Views/Recover-password/RegistrarContraScreen';
+import VerificateScreen from '../Views/Recover-password/VerificateScreen';
+import RequestMentoringScreen from '../Views/RequestMentoring/RequestMentoringScreen';
+import EditRequestMentoringScreen from '../Views/RequestMentoring/EditRequestMentoringScreen';
+import EventListScreen from '../Views/EventList/EventListScreen';
 
 
 const MainStacks = createStackNavigator();
