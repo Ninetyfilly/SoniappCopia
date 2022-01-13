@@ -14,7 +14,7 @@ import axios from 'axios';
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import GLOBALS from '../Utils/Global';
+import GLOBALS from '../../Utils/Global';
 
 const RequestMentory = ({ navigation }) => {
   const [loading, setLoading] = useState(false);

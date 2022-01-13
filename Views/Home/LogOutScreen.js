@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import GLOBALS from '../Utils/Global';
+import GLOBALS from '../../Utils/Global';
 
 const AuthLoadingScreen = ({ navigation }) => {
   const [token, setToken] = React.useState('');

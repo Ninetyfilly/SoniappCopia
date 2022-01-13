@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
-import imageSoni from '../assets/SONIAPP.png';
+import imageSoni from '../../assets/SONIAPP.png';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

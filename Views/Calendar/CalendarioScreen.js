@@ -4,7 +4,7 @@ import { Agenda } from 'react-native-calendars';
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const moment = require('moment');
-import GLOBALS from '../Utils/Global';
+import GLOBALS from '../../Utils/Global';
 
 const CalendarioScreen = () => {
   const _format = 'YYYY-MM-DD';

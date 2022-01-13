@@ -11,12 +11,12 @@ import {
   Button,
 } from 'react-native';
 import { Card, Paragraph, Avatar } from 'react-native-paper';
-import imageSoni from '../assets/SONIAPP.png';
-import { validatePassword } from '../Utils/Helpers';
+import imageSoni from '../../assets/SONIAPP.png';
+import { validatePassword } from '../../Utils/Helpers';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import GLOBALS from '../Utils/Global';
+import GLOBALS from '../../Utils/Global';
 
 const RegisterScreen = ({ navigation }) => {
   //hokks

@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import GLOBALS from '../Utils/Global';
 import MentorScreen from './NotificacionMentor'
 import PadawanScreen from './NotificacionPadawan'
 

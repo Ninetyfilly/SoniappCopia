@@ -13,10 +13,10 @@ import {
   ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import imageSoni from '../assets/SONIAPP.png';
+import imageSoni from '../../assets/SONIAPP.png';
 import { Button } from 'react-native-paper';
 import axios from 'axios';
-import GLOBALS from '../Utils/Global';
+import GLOBALS from '../../Utils/Global';
 
 const LoginScreen = ({ navigation }) => {
   const [user, setUser] = React.useState('');
