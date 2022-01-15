@@ -17,13 +17,13 @@ const PadawanScreen = ({ navigation }) => {
   const [userToken, setUserToken] = useState('');
   const [events, setEvents] = useState('');
 
-    useEffect(() => {
-      getEvents();
-    }, [userToken]);
+  useEffect(() => {
+    getEvents();
+  }, [userToken]);
 
-    useEffect(() => {
-      getToken();
-    }, []);
+  useEffect(() => {
+    getToken();
+  }, []);
 
   const getToken = async () => {
     try {
@@ -33,7 +33,7 @@ const PadawanScreen = ({ navigation }) => {
   };
 
   const getEvents = async () => {
-      console.log(userToken)
+    console.log(userToken);
     const options = {
       headers: {
         Authorization: `Token ${userToken}`,
@@ -46,26 +46,24 @@ const PadawanScreen = ({ navigation }) => {
       );
       const dataFormateados = data.events.map((item) => {
         return {
-            id: item.id,
-            title: item.title,
-            date: item.date,
-            time: item.time,
-            type: item.type,
-            duration: item.duration,
-          }
-        }
-      )
-      setEvents(dataFormateados)
-      console.log(events)
+          id: item.id,
+          title: item.title,
+          date: item.date,
+          time: item.time,
+          type: item.type,
+          duration: item.duration,
+        };
+      });
+      setEvents(dataFormateados);
+      console.log(events);
     } catch (error) {
       console.log(error);
-      
     }
   };
 
   const renderItem = ({ item }) => {
-    const backgroundColor = (item.id % 2) == 0 ? '#c4d043' : '#585490';
-    const color = (item.id % 2) == 0 ? 'black' : 'white';
+    const backgroundColor = item.id % 2 == 0 ? '#c4d043' : '#585490';
+    const color = item.id % 2 == 0 ? 'black' : 'white';
     return (
       <Item
         item={item}
@@ -80,33 +78,40 @@ const PadawanScreen = ({ navigation }) => {
       <Text style={[styles.title, textColor]}>{item.title}</Text>
       <Text style={[styles.title, textColor]}>fecha: {item.date}</Text>
       <Text style={[styles.title, textColor]}>time: {item.time}</Text>
-      <Text style={[styles.title, textColor]}>
-        tipo de evento: {item.type}
-      </Text>
+      <Text style={[styles.title, textColor]}>tipo de evento: {item.type}</Text>
       <Text style={[styles.title, textColor]}>duracion: {item.duration}</Text>
     </View>
   );
 
-  
+  const LoadScreen = () => {
+    if (events[0] !== undefined) {
+      return (
+        <View style={styles.view}>
+          <SafeAreaView style={styles.container}>
+            <FlatList
+              data={events}
+              renderItem={renderItem}
+              keyExtractor={(item) => `eventos-${item.id}`}
+            />
+          </SafeAreaView>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.view}>
+          <Text style={styles.empty}>No hay eventos disponibles</Text>
+        </View>
+      );
+    }
+  };
 
-  return (
-    <View style={styles.view}>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={events}
-          renderItem={renderItem}
-          keyExtractor={(item) => `eventos-${item.id}`}
-        />
-      </SafeAreaView>
-    </View>
-  );
+  return LoadScreen();
 };
 
 export default PadawanScreen;
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
   },
@@ -125,5 +130,10 @@ const styles = StyleSheet.create({
   state: {
     fontSize: 20,
     alignSelf: 'flex-end',
+  },
+  empty: {
+    alignItems: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
   },
 });

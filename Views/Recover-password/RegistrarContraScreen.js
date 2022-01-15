@@ -11,7 +11,6 @@ import {
   Button,
 } from 'react-native';
 import { Card, Paragraph, Avatar } from 'react-native-paper';
-import imageSoni from '../../assets/SONIAPP.png';
 import { validatePassword } from '../../Utils/Helpers';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -80,21 +79,21 @@ const RegisterScreen = ({ navigation }) => {
     setLoading(true);
     if (validatePassword(password) == 1) {
       setLoading(false);
-      Alert.alert('La contraseña no debe de estar vacia');
+      Alert.alert("Error",'La contraseña no debe de estar vacia');
     } else if (validatePassword(password) == 2) {
       setLoading(false);
-      Alert.alert(
-        'La contraseña debe de contener al menos un caracter especial'
+      Alert.alert("Error",
+        'La contraseña debe de contener al menos una mayúscula, una minuscula, un numero y un caracter especial'
       );
     } else if (validatePassword(passwordConfirm) == 1) {
       setLoading(false);
-      Alert.alert(
-        'La contraseña debe de contener al menos un caracter especial,un numero y una mayuscula'
+      Alert.alert("Error",
+        'La contraseña no debe de estar vacia'
       );
     } else if (validatePassword(passwordConfirm) == 2) {
       setLoading(false);
-      Alert.alert(
-        'La contraseña debe de contener al menos un caracter especial,un numero y una mayuscula'
+      Alert.alert("Error",
+        'La contraseña debe de contener al menos una mayúscula, una minuscula, un numero y un caracter especial'
       );
     } else {
       try {
@@ -126,7 +125,6 @@ const RegisterScreen = ({ navigation }) => {
           style={styles.imageHackademy}
           resizeMode='cover'
         >
-          <Image source={imageSoni} style={styles.imageSonia} />
         </ImageBackground>
       </View>
       <TouchableOpacity
@@ -183,7 +181,6 @@ const RegisterScreen = ({ navigation }) => {
           {loading ? 'Cargando...' : 'Registrar Contraseña'}
         </Text>
       </TouchableOpacity>
-      <Text style={{ flex: 2 }}></Text>
     </View>
   );
 };
@@ -195,58 +192,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  flecha: {
-    flex: 0,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    transform: [{ scale: 1.5 }, { translateX: 55 }],
-  },
   soniapp: {
-    flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 50,
   },
-  imageSonia: {
-    height: 200,
-    width: 250,
-    marginLeft: 5,
-  },
   imageHackademy: {
-    flex: 0,
     justifyContent: 'center',
     height: 250,
     width: 250,
   },
   formContra: {
-    flex: 1,
     marginBottom: 20,
     marginBottom: 50,
     width: 250,
     transform: [{ translateX: 85 }],
   },
   formContraConfirm: {
-    flex: 1,
     marginBottom: 50,
     width: 250,
     transform: [{ translateX: 85 }],
   },
   form2: {
-    flex: 0,
-    marginBottom: 20,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#c4d043',
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 10,
   },
   formPasswordTop: {
-    flex: 0,
     marginRight: 73,
   },
   formPasswordBot: {
-    flex: 0,
     marginRight: 73,
   },
   cuadroTexto: {
-    flex: 0,
     color: '#000000',
     fontFamily: ('Poppins', 'sans-serif'),
     borderRadius: 10,
@@ -261,16 +244,10 @@ const styles = StyleSheet.create({
   textoBotonRecuperar: {
     color: '#ffffff',
     fontFamily: ('Poppins', 'sans-serif'),
-    borderRadius: 10,
-    alignSelf: 'center',
-    alignItems: 'flex-start',
-    minWidth: '55%',
-    paddingVertical: 7,
-    backgroundColor: '#00b7b8',
-    height: 35,
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   textButtonHide: {
-    flex: 0,
     color: '#000000',
     fontFamily: ('Poppins', 'sans-serif'),
     alignSelf: 'flex-end',

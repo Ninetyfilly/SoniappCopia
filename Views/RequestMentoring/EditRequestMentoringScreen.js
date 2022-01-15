@@ -172,7 +172,9 @@ const RequestMentory = ({ navigation }) => {
   };
 
   const getMentoringId = async (id) => {
-    const { data } = await axios.get(`${GLOBALS.API}events/mentoringtype/id/${id}`);
+    const { data } = await axios.get(
+      `${GLOBALS.API}events/mentoringtype/id/${id}`
+    );
     setTemporalMentoring(data.name);
   };
   const getMentorId = async (id) => {
@@ -306,25 +308,27 @@ const RequestMentory = ({ navigation }) => {
   return (
     <View style={styles.view}>
       <Text>Selecciona La mentoria que deseas modificar</Text>
-      <RNPickerSelect //mentoring
-        onValueChange={(value) => {
-          console.log(value);
-          selectedMentoring(value);
-        }}
-        items={idMentoring}
-        placeholder={{}}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+      <View style={styles.borderInput}>
+        <RNPickerSelect //mentoring
+          onValueChange={(value) => {
+            console.log(value);
+            selectedMentoring(value);
+          }}
+          items={idMentoring}
+          placeholder={{}}
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='grey' />;
+          }}
+        />
+      </View>
+      <View paddingVertical={5} />
       <TextInput
         label='titulo'
         mode='outlined'
@@ -337,76 +341,79 @@ const RequestMentory = ({ navigation }) => {
       />
       <View paddingVertical={5} />
       <Text>Selecciona el tipo de mentoria</Text>
-      <RNPickerSelect //mentoring
-        onValueChange={(value) => {
-          console.log(value);
-          getMentor(value);
-        }}
-        items={items}
-        placeholder={
-          yet
-            ? {
-                label: temporalMentoring,
-                value: selectedIdMentoring.mentoring_type,
-              }
-            : {}
-        }
-        useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+      <View style={styles.borderInput}>
+        <RNPickerSelect //mentoring
+          onValueChange={(value) => {
+            console.log(value);
+            getMentor(value);
+          }}
+          items={items}
+          placeholder={
+            yet
+              ? {
+                  label: temporalMentoring,
+                  value: selectedIdMentoring.mentoring_type,
+                }
+              : {}
+          }
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+          }}
+        />
+      </View>
       <View paddingVertical={5} />
       <Text>Selecciona al mentor</Text>
-      <RNPickerSelect //Mentor
-        onValueChange={(value) => {
-          console.log(value);
-          getAvailability(value);
-        }}
-        items={mentores}
-        // placeholder={yet?{ label: temporalMentor, value: selectedIdMentoring.mentor }:{}}
-        placeholder={{}}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+      <View style={styles.borderInput}>
+        <RNPickerSelect //Mentor
+          onValueChange={(value) => {
+            console.log(value);
+            getAvailability(value);
+          }}
+          items={mentores}
+          // placeholder={yet?{ label: temporalMentor, value: selectedIdMentoring.mentor }:{}}
+          placeholder={{}}
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+          }}
+        />
+      </View>
       <View paddingVertical={5} />
       <Text>Selecciona el horario y el dia</Text>
-      <RNPickerSelect //availability
-        onValueChange={(value) => {
-          console.log(value);
-          getHours(value);
-          setDiaDisponible(value);
-        }}
-        items={availability}
-        placeholder={{}}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+      <View style={styles.borderInput}>
+        <RNPickerSelect //availability
+          onValueChange={(value) => {
+            console.log(value);
+            getHours(value);
+            setDiaDisponible(value);
+          }}
+          items={availability}
+          placeholder={{}}
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+          }}
+        />
+      </View>
       <View style={{ marginTop: 12 }}>
         <Button
           onPress={showDatepicker}
@@ -491,6 +498,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  borderInput: {
+    backgroundColor: '#eeeeee',
+    borderWidth: 1,
+    borderRadius: 10,
+  },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -498,19 +510,17 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'gray',
     borderRadius: 4,
     color: 'black',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    fontSize: 16,
+    display: 'flex',
+    fontSize: 35,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
     color: 'black',
     paddingRight: 30, // to ensure the text is never behind the icon
+    marginVertical: 15,
   },
 });

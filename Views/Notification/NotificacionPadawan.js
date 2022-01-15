@@ -17,12 +17,11 @@ const PadawanScreen = () => {
   const [userToken, setUserToken] = useState('');
   const [events, setEvents] = useState('');
   const [selectedId, setSelectedId] = useState(null);
-
-  
+  const [changue, setChangue] = useState(false);
 
   useEffect(() => {
     getEvents();
-  }, [userToken]);
+  }, [userToken, changue]);
 
   useEffect(() => {
     getToken();
@@ -46,21 +45,18 @@ const PadawanScreen = () => {
         `${GLOBALS.API}events/event/padawan/assistance/`,
         options
       );
-      // const dataFormateados = data.mentorships.map((item) => {
-      //   let descripcion =
-      //     item.observation !== null ? item.observation : 'Sin descripcion';
-      //   return {
-      //       id: item.id,
-      //       title: item.event.title,
-      //       date: item.event.date,
-      //       time: item.event.time,
-      //       observation: descripcion,
-      //       status: item.status,
-      //     }
-      //   }
-      // )
-      // setEvents(dataFormateados)
-      console.log(data);
+      const dataFormateados = data.events.map((item) => {
+        return {
+          id: item.id,
+          title: item.title,
+          date: item.date,
+          time: item.time,
+          type: item.type,
+          observation: 'sin descripcion',
+        };
+      });
+      setEvents(dataFormateados);
+      console.log(dataFormateados);
     } catch (error) {
       console.log(error);
     }
@@ -72,101 +68,122 @@ const PadawanScreen = () => {
         onPress={onPress}
         style={[styles.item, backgroundColor]}
       >
-        <Text style={[styles.state, textColor]}>{item.status}</Text>
+        <Text style={[styles.type, textColor]}>{item.type}</Text>
         <Text style={[styles.title, textColor]}>{item.title}</Text>
         <Text style={[styles.title, textColor]}>Dia: {item.date}</Text>
         <Text style={[styles.title, textColor]}>Hora {item.time}</Text>
-        <Text style={[styles.title, textColor]}>
-          Observacion: {item.observation}
-        </Text>
       </TouchableOpacity>
     );
   };
-  const backgroundColorChange = (status) => {
-    if (status === 'solicitada') {
-      return 'grey';
-    } else if (status === 'confirmada') {
-      return '#00b7b8';
-    } else if (status === 'finalizada') {
-      return 'black';
-    } else {
-      return '#cf3232';
+
+  const eventResponse = async (response) => {
+    console.log(response);
+    console.log(selectedId);
+    const options = {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${GLOBALS.API}events/event/padawan/confirm/${selectedId}/`,
+        { response },
+        options
+      );
+      const attendance = response == 1 ? 'confirmada' : 'rechazada';
+      Alert.alert('Asistencia ' + attendance + ' correctamente');
+      if (!changue) {
+        setChangue(true);
+      } else {
+        setChangue(false);
+      }
+    } catch (error) {
+      console.log(error);
+      const { response } = error;
+      const { request, ...errorObject } = response; // take everything but 'request'
+      console.log(errorObject.data.error);
+      Alert.alert(
+        'Error',
+        errorObject.data.error !== undefined
+          ? errorObject.data.error
+          : 'Ha ocurrido un error'
+      );
     }
   };
 
   const renderItem = ({ item }) => {
-    const backgroundColor = backgroundColorChange(item.status);
-    const color = item.status === 'solicitada' ? 'black' : 'white';
-    if (item.status == 'solicitada') {
-      return (
-        <Item
-          item={item}
-          onPress={() => {
-            Alert.alert(
-              'Aceptar o rechazar mentoria',
-              item.title + '\ndia: ' + item.date + '\nhora: ' + item.time,
-              [
-                {
-                  text: 'Cancel',
-                  style: 'cancel',
-                },
-                {
-                  text: 'Aceptar',
-                  onPress: () => mentoringResponse('confirmada'),
-                  style: 'cancel',
-                },
-                {
-                  text: 'Rechazar',
-                  onPress: () => mentoringResponse('rechazada'),
-                  style: 'cancel',
-                },
-              ],
+    const backgroundColor = item.id % 2 == 0 ? '#c4d043' : '#585490';
+    const color = item.id % 2 == 0 ? 'black' : 'white';
+    return (
+      <Item
+        item={item}
+        onPress={() => {
+          Alert.alert(
+            'Confirmar asistencia en el evento',
+            item.title + '\ndia: ' + item.date + '\nhora: ' + item.time,
+            [
               {
-                cancelable: true,
-              }
-            ); //urilizar Modals
-            setSelectedId(item.id);
-          }}
-          backgroundColor={{ backgroundColor }}
-          textColor={{ color }}
-        />
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Confirmar',
+                onPress: () => eventResponse(1), //1 es asistira
+                style: 'cancel',
+              },
+              {
+                text: 'Rechazar',
+                onPress: () => eventResponse(0), //0 es no asistira
+                style: 'cancel',
+              },
+            ],
+            {
+              cancelable: true,
+            }
+          ); //urilizar Modals
+          setSelectedId(item.id);
+        }}
+        backgroundColor={{ backgroundColor }}
+        textColor={{ color }}
+      />
+    );
+  };
+
+  const LoadScreen = () => {
+    if (events[0] !== undefined) {
+      return (
+        <View style={styles.view}>
+          <SafeAreaView style={styles.container}>
+            <FlatList
+              data={events}
+              renderItem={renderItem}
+              keyExtractor={(item) => `Notificacion-${item.id}`}
+              extraData={selectedId}
+              //   horizontal={true} //seutiliza para renderizar los elementos de forma horizontal
+            />
+          </SafeAreaView>
+        </View>
       );
     } else {
       return (
-        <Item
-          item={item}
-          textColor={{ color }}
-          backgroundColor={{ backgroundColor }}
-        />
+        <View style={styles.view}>
+          <Text style={styles.empty}>No hay eventos por confirmar</Text>
+        </View>
       );
     }
   };
 
-  return (
-    <View style={styles.view}>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={events}
-          renderItem={renderItem}
-          keyExtractor={(item) => `Notificacion-${item.id}`}
-          extraData={selectedId}
-          //   horizontal={true} //seutiliza para renderizar los elementos de forma horizontal
-        />
-      </SafeAreaView>
-    </View>
-  );
+  return LoadScreen();
 };
 
 export default PadawanScreen;
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
   },
   container: {
-    flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
@@ -178,8 +195,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
   },
-  state: {
+  type: {
     fontSize: 20,
     alignSelf: 'flex-end',
+    fontWeight: 'bold',
+  },
+  empty: {
+    alignItems: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
   },
 });

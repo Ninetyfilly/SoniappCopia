@@ -241,6 +241,7 @@ const RequestMentory = ({ navigation }) => {
       />
       <View paddingVertical={5} />
       <Text>Selecciona el tipo de mentoria</Text>
+      <View style={styles.borderInput}>
       <RNPickerSelect //mentoring
         onValueChange={(value) => {
           console.log(value);
@@ -248,7 +249,7 @@ const RequestMentory = ({ navigation }) => {
         }}
         items={items}
         placeholder={{}}
-        useNativeAndroidPickerStyle={false}
+        // useNativeAndroidPickerStyle={false}
         style={{
           ...pickerSelectStyles,
           iconContainer: {
@@ -260,8 +261,10 @@ const RequestMentory = ({ navigation }) => {
           return <Ionicons name='md-arrow-down' size={24} color='gray' />;
         }}
       />
+      </View>
       <View paddingVertical={5} />
       <Text>Selecciona al mentor</Text>
+      <View style={styles.borderInput}>
       <RNPickerSelect //Mentor
         onValueChange={(value) => {
           console.log(value);
@@ -269,7 +272,7 @@ const RequestMentory = ({ navigation }) => {
         }}
         items={mentores}
         placeholder={{}}
-        useNativeAndroidPickerStyle={false}
+        // useNativeAndroidPickerStyle={false}
         style={{
           ...pickerSelectStyles,
           iconContainer: {
@@ -281,8 +284,10 @@ const RequestMentory = ({ navigation }) => {
           return <Ionicons name='md-arrow-down' size={24} color='gray' />;
         }}
       />
+      </View>
       <View paddingVertical={5} />
       <Text>Selecciona el horario y el dia</Text>
+      <View style={styles.borderInput}>
       <RNPickerSelect //availability
         onValueChange={(value) => {
           console.log(value);
@@ -291,7 +296,7 @@ const RequestMentory = ({ navigation }) => {
         }}
         items={availability}
         placeholder={{}}
-        useNativeAndroidPickerStyle={false}
+        // useNativeAndroidPickerStyle={false}
         style={{
           ...pickerSelectStyles,
           iconContainer: {
@@ -303,6 +308,7 @@ const RequestMentory = ({ navigation }) => {
           return <Ionicons name='md-arrow-down' size={24} color='gray' />;
         }}
       />
+      </View>
       <View style={{ marginTop: 12 }}>
         <Button
           onPress={showDatepicker}
@@ -387,6 +393,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  borderInput: {
+    backgroundColor: '#eeeeee',
+    borderWidth: 1,
+    borderRadius: 10,
+  },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -400,13 +411,12 @@ const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    fontSize: 16,
+    display: 'flex',
+    fontSize: 35,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
     color: 'black',
     paddingRight: 30, // to ensure the text is never behind the icon
+    marginVertical: 15,
   },
 });

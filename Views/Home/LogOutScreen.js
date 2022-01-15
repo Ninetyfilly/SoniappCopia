@@ -18,7 +18,8 @@ const AuthLoadingScreen = ({ navigation }) => {
 
   _signIn = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
-    if (userToken) {
+    console.log(userToken)
+    if (userToken !== null) {
       try {
         const { data } = await axios.get(`${GLOBALS.API}users/logout/?token=${userToken}`, {
           token: userToken,
@@ -29,6 +30,8 @@ const AuthLoadingScreen = ({ navigation }) => {
         console.log(error);
       }
       await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('name');
+      await AsyncStorage.removeItem('rol');
       navigation.navigate('LoginScreen');
     } else {
       navigation.navigate('LoginScreen');

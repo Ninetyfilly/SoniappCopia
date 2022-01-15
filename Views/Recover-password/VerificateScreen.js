@@ -10,7 +10,6 @@ import {
   Alert,
 } from 'react-native';
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
-import imageSoni from '../../assets/SONIAPP.png';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -57,7 +56,6 @@ const RegisterScreen = ({ navigation }) => {
           style={styles.imageHackademy}
           resizeMode='cover'
         >
-          <Image source={imageSoni} style={styles.imageSonia} />
         </ImageBackground>
       </View>
       <View style={styles.formCode}>
@@ -88,30 +86,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   soniapp: {
-    flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 50,
   },
-  imageSonia: {
-    height: 200,
-    width: 250,
-    marginLeft: 5,
-  },
   imageHackademy: {
-    flex: 0,
-    justifyContent: 'center',
     height: 250,
     width: 250,
+    alignSelf: 'center',
   },
   form2: {
-    flex: 2,
-    marginBottom: 20,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#c4d043',
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 10,
   },
   formCode: {
-    flex: 1,
     marginBottom: 10,
     width: 250,
     transform: [{ translateX: 85 }],
@@ -119,12 +113,7 @@ const styles = StyleSheet.create({
   textoBotonRecuperar: {
     color: '#ffffff',
     fontFamily: ('Poppins', 'sans-serif'),
-    borderRadius: 10,
-    alignSelf: 'center',
-    alignItems: 'flex-start',
-    minWidth: '20%',
-    paddingVertical: 7,
-    backgroundColor: '#00b7b8',
-    height: 35,
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
