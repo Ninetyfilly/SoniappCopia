@@ -76,9 +76,9 @@ const PadawanScreen = () => {
     );
   };
 
-  const eventResponse = async (response) => {
+  const eventResponse = async (response,id) => {
     console.log(response);
-    console.log(selectedId);
+    console.log(id)
     const options = {
       headers: {
         Authorization: `Token ${userToken}`,
@@ -86,7 +86,7 @@ const PadawanScreen = () => {
     };
     try {
       const { data } = await axios.put(
-        `${GLOBALS.API}events/event/padawan/confirm/${selectedId}/`,
+        `${GLOBALS.API}events/event/padawan/confirm/${id}/`,
         { response },
         options
       );
@@ -118,6 +118,7 @@ const PadawanScreen = () => {
       <Item
         item={item}
         onPress={() => {
+          setSelectedId(item.id);
           Alert.alert(
             'Confirmar asistencia en el evento',
             item.title + '\ndia: ' + item.date + '\nhora: ' + item.time,
@@ -128,12 +129,12 @@ const PadawanScreen = () => {
               },
               {
                 text: 'Confirmar',
-                onPress: () => eventResponse(1), //1 es asistira
+                onPress: () => eventResponse(1,item.id), //1 es asistira
                 style: 'cancel',
               },
               {
                 text: 'Rechazar',
-                onPress: () => eventResponse(0), //0 es no asistira
+                onPress: () => eventResponse(0,item.id), //0 es no asistira
                 style: 'cancel',
               },
             ],
@@ -141,7 +142,6 @@ const PadawanScreen = () => {
               cancelable: true,
             }
           ); //urilizar Modals
-          setSelectedId(item.id);
         }}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}

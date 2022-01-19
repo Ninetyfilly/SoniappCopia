@@ -37,7 +37,7 @@ const ProfileScreen = ({ navigation }) => {
   React.useEffect(() => {
     getUser();
     console.log(user);
-  }, []);
+  });
 
   const LoadScreen = () =>{
     if (user == 'mentor') {

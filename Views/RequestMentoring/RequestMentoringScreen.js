@@ -53,7 +53,6 @@ const RequestMentory = ({ navigation }) => {
 
   useEffect(() => {
     filterType();
-    console.log('Listo');
   }, [mentoringTypes]);
 
   const getMentoring = async () => {
@@ -62,7 +61,6 @@ const RequestMentory = ({ navigation }) => {
         `${GLOBALS.API}events/mentoringdata/`
       );
       setMentoringTypes({ mentoring_types: data.mentoring_types });
-      // console.log(mentoringTypes.mentoring_types);
     } catch (error) {
       console.log(error + ' ha salido mal sin aprametros');
     }
@@ -74,7 +72,6 @@ const RequestMentory = ({ navigation }) => {
       (item) => item.id == id
     );
     setLater(mentory.name);
-    console.log(later);
     const mentors = mentory.mentors.map((item) => {
       return { label: item.name, value: item.id };
     });
@@ -133,6 +130,7 @@ const RequestMentory = ({ navigation }) => {
   ];
 
   const getHours = (day) => {
+    console.log("Existe dia: ",dia)
     const mentory = mentoringTypes.mentoring_types.find(
       (item) => item.name == later
     );
@@ -209,7 +207,6 @@ const RequestMentory = ({ navigation }) => {
         datas,
         options
       );
-      console.log(data);
       Alert.alert("Mentoria Agendada",
         'Se ha agendado su mentoria de ' +
           title +
@@ -244,7 +241,6 @@ const RequestMentory = ({ navigation }) => {
       <View style={styles.borderInput}>
       <RNPickerSelect //mentoring
         onValueChange={(value) => {
-          console.log(value);
           getMentor(value);
         }}
         items={items}
@@ -267,7 +263,6 @@ const RequestMentory = ({ navigation }) => {
       <View style={styles.borderInput}>
       <RNPickerSelect //Mentor
         onValueChange={(value) => {
-          console.log(value);
           getAvailability(value);
         }}
         items={mentores}
@@ -290,7 +285,6 @@ const RequestMentory = ({ navigation }) => {
       <View style={styles.borderInput}>
       <RNPickerSelect //availability
         onValueChange={(value) => {
-          console.log(value);
           getHours(value);
           setDiaDisponible(value);
         }}

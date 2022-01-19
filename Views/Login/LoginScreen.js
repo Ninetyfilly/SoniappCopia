@@ -26,18 +26,15 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = React.useState(false);
   // const [phoneToken, setPhoneToken] = React.useState('');
 
-
   const image = {
     uri: 'https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png',
   };
 
-  _signIn = async ({token, name, rol}) => {
+  _signIn = async ({ token, name, rol }) => {
     try {
       await AsyncStorage.setItem('userToken', token);
       await AsyncStorage.setItem('name', name);
       await AsyncStorage.setItem('rol', rol);
-      setUser('')
-      setPassword('')
       navigation.navigate('HomeScreen');
     } catch (error) {
       Alert.alert('ERROOOOOOOOOOR en logiiin');
@@ -56,21 +53,20 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Por favor, ingresa tu Contraseña');
     } else {
       try {
-        const { data } = await axios.post(
-          `${GLOBALS.API}users/login/`,
-          {
-            "email": user,
-            password,
-            "token-expo": tokenP, 
-          }
-        );
+        const { data } = await axios.post(`${GLOBALS.API}users/login/`, {
+          email: user,
+          password,
+          'token-expo': tokenP,
+        });
         console.log(data);
-        setLoading(false)
+        setLoading(false);
+        setUser('');
+        setPassword('');
         _signIn(data);
       } catch (error) {
-          setLoading(false)
-          Alert.alert("Ha ocurrio un error")
-          console.log(error)
+        setLoading(false);
+        Alert.alert('Ha ocurrio un error');
+        console.log(error);
       }
     }
   };

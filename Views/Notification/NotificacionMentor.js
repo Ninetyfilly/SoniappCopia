@@ -133,6 +133,7 @@ const MentorScreen = () => {
         <Item
           item={item}
           onPress={() => {
+            setSelectedId(item.id);
             Alert.alert(
               'Aceptar o rechazar mentoria',
               item.title + '\ndia: ' + item.date + '\nhora: ' + item.time,
@@ -156,7 +157,6 @@ const MentorScreen = () => {
                 cancelable: true,
               }
             ); //urilizar Modals
-            setSelectedId(item.id);
           }}
           backgroundColor={{ backgroundColor }}
           textColor={{ color }}

@@ -17,13 +17,22 @@ const PadawanScreen = ({ navigation }) => {
   const [userToken, setUserToken] = useState('');
   const [events, setEvents] = useState('');
 
-  useEffect(() => {
-    getEvents();
-  }, [userToken]);
+  // useEffect(() => {
+  //   getEvents();
+  // }, [userToken]);
 
   useEffect(() => {
     getToken();
   }, []);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Screen was focused
+      // Do something
+      getEvents();
+    });
+    return unsubscribe;
+  }, [navigation,userToken]);
 
   const getToken = async () => {
     try {
