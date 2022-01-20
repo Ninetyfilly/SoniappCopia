@@ -65,8 +65,15 @@ const LoginScreen = ({ navigation }) => {
         _signIn(data);
       } catch (error) {
         setLoading(false);
-        Alert.alert('Ha ocurrio un error');
-        console.log(error);
+        const { response } = error;
+        const { request, ...errorObject } = response; // take everything but 'request'
+        console.log(errorObject.data.error);
+        Alert.alert(
+          'Error',
+          errorObject.data.error !== undefined
+            ? errorObject.data.error
+            : 'Selecciona bien los datos'
+        );
       }
     }
   };

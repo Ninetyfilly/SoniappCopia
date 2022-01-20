@@ -41,8 +41,8 @@ const RequestMentory = ({ navigation }) => {
   const [time, setTime] = useState('');
   const [token, setToken] = useState('');
 
-  const [initialHour, setInitialHour] = useState('');
-  const [finalHour, setFinalHour] = useState('');
+  const [initialHour, setInitialHour] = useState(null);
+  const [finalHour, setFinalHour] = useState(null);
 
   const [mentorSelected, setMentorSelected] = useState('');
   const [mentorId, setMentorId] = useState('');
@@ -129,7 +129,12 @@ const RequestMentory = ({ navigation }) => {
         value: item.day,
       };
     });
-    setAvailability(disponibilidad);
+    const itemDisponibilidad = { label: 'Sin disponibilidad', value: null };
+    if (disponibilidad[0] !== undefined) {
+      setAvailability(disponibilidad);
+    } else {
+      setAvailability(itemDisponibilidad);
+    }
   };
 
   const filterType = () => {
@@ -206,6 +211,8 @@ const RequestMentory = ({ navigation }) => {
   ];
 
   const getHours = (day) => {
+    console.log(day)
+    if (day !== null) {
     const mentory = mentoringTypes.mentoring_types.find(
       (item) => item.name == later
     );
@@ -215,6 +222,10 @@ const RequestMentory = ({ navigation }) => {
     const availability = mentors.availability.find((item) => item.day == day);
     setInitialHour(availability.start_hour);
     setFinalHour(availability.final_hour);
+    } else {
+      setInitialHour(null);
+      setFinalHour(null);
+    }
   };
 
   const onChange = (event, selectedDate) => {
@@ -258,6 +269,7 @@ const RequestMentory = ({ navigation }) => {
   };
 
   const loadData = async () => {
+    setLoading(true)
     const options = {
       headers: {
         Authorization: `Token ${token}`,
@@ -292,7 +304,9 @@ const RequestMentory = ({ navigation }) => {
           ' horas,\n con el mentor ' +
           mentorSelected
       );
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
       console.log(errorObject.data.error);
@@ -302,6 +316,7 @@ const RequestMentory = ({ navigation }) => {
           ? errorObject.data.error
           : 'Selecciona bien los datos'
       );
+      console.log(error)
     }
   };
 
@@ -396,12 +411,11 @@ const RequestMentory = ({ navigation }) => {
       <View style={styles.borderInput}>
         <RNPickerSelect //availability
           onValueChange={(value) => {
-            console.log(value);
             getHours(value);
             setDiaDisponible(value);
           }}
           items={availability}
-          placeholder={{}}
+          // placeholder={{}}
           style={{
             ...pickerSelectStyles,
             iconContainer: {
@@ -416,6 +430,7 @@ const RequestMentory = ({ navigation }) => {
       </View>
       <View style={{ marginTop: 12 }}>
         <Button
+          disabled={initialHour !== null?false:true}
           onPress={showDatepicker}
           title='Selecciona el Dia'
           color='#00b7b8'
@@ -424,6 +439,7 @@ const RequestMentory = ({ navigation }) => {
       </View>
       <View style={{ marginTop: 12 }}>
         <Button
+          disabled={initialHour !== null?false:true}
           onPress={showTimepicker}
           title='Selecciona la hora'
           color='#00b7b8'

@@ -83,7 +83,7 @@ const MentorScreen = () => {
     );
   };
 
-  const mentoringResponse = async(response) => {
+  const mentoringResponse = async(response,id) => {
     console.log(response)
     const options = {
       headers: {
@@ -92,7 +92,7 @@ const MentorScreen = () => {
     };
     try {
       const { data } = await axios.put(
-        `${GLOBALS.API}events/mentoring/response/${selectedId}/`,
+        `${GLOBALS.API}events/mentoring/response/${id}/`,
         {response},
         options
       );
@@ -144,12 +144,12 @@ const MentorScreen = () => {
                 },
                 {
                   text: 'Aceptar',
-                  onPress: () => mentoringResponse("confirmada"),
+                  onPress: () => mentoringResponse("confirmada",item.id),
                   style: 'cancel',
                 },
                 {
                   text: 'Rechazar',
-                  onPress: () => mentoringResponse("rechazada"),
+                  onPress: () => mentoringResponse("rechazada",item.id),
                   style: 'cancel',
                 },
               ],

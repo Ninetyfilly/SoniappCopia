@@ -29,6 +29,7 @@ const ProfileScreen = ({ navigation }) => {
       // Screen was focused
       // Do something
       LoadScreen();
+      setUser('');
       console.log("Se cargo la pantalla de: ",user)
     });
     return unsubscribe;
@@ -36,7 +37,6 @@ const ProfileScreen = ({ navigation }) => {
 
   React.useEffect(() => {
     getUser();
-    console.log(user);
   });
 
   const LoadScreen = () =>{

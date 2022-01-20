@@ -35,8 +35,8 @@ const RequestMentory = ({ navigation }) => {
   const [time, setTime] = useState('');
   const [token, setToken] = useState('');
 
-  const [initialHour, setInitialHour] = useState('');
-  const [finalHour, setFinalHour] = useState('');
+  const [initialHour, setInitialHour] = useState(null);
+  const [finalHour, setFinalHour] = useState(null);
   const [mentorSelected, setMentorSelected] = useState('');
   const [mentorId, setMentorId] = useState('');
   const [mentoringId, setMentoringId] = useState('');
@@ -57,9 +57,7 @@ const RequestMentory = ({ navigation }) => {
 
   const getMentoring = async () => {
     try {
-      const { data } = await axios.get(
-        `${GLOBALS.API}events/mentoringdata/`
-      );
+      const { data } = await axios.get(`${GLOBALS.API}events/mentoringdata/`);
       setMentoringTypes({ mentoring_types: data.mentoring_types });
     } catch (error) {
       console.log(error + ' ha salido mal sin aprametros');
@@ -98,7 +96,12 @@ const RequestMentory = ({ navigation }) => {
         value: item.day,
       };
     });
-    setAvailability(disponibilidad);
+    const itemDisponibilidad = { label: 'Sin disponibilidad', value: null };
+    if (disponibilidad[0] !== undefined) {
+      setAvailability(disponibilidad);
+    } else {
+      setAvailability(itemDisponibilidad);
+    }
   };
 
   const filterType = () => {
@@ -130,35 +133,44 @@ const RequestMentory = ({ navigation }) => {
   ];
 
   const getHours = (day) => {
-    console.log("Existe dia: ",dia)
-    const mentory = mentoringTypes.mentoring_types.find(
-      (item) => item.name == later
-    );
-    const mentors = mentory.mentors.find((item) => {
-      return item.name == mentorSelected;
-    });
-    const availability = mentors.availability.find((item) => item.day == day);
-    setInitialHour(availability.start_hour);
-    setFinalHour(availability.final_hour);
+    console.log(day)
+    if (day !== null) {
+      const mentory = mentoringTypes.mentoring_types.find(
+        (item) => item.name == later
+      );
+      const mentors = mentory.mentors.find((item) => {
+        return item.name == mentorSelected;
+      });
+      const availability = mentors.availability.find((item) => item.day == day);
+      setInitialHour(availability.start_hour);
+      setFinalHour(availability.final_hour);
+    } else {
+      setInitialHour(null);
+      setFinalHour(null);
+    }
   };
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-    let day = currentDate.toISOString();
-    let dates = day.slice(0, 10);
-    let hour = currentDate.toLocaleTimeString();
-    let dia = currentDate.getDay();
-    if (diaDisponible == DIAS[dia - 1]) {
-      setDay(dates);
-      if (initialHour <= hour && hour <= finalHour) {
-        setTime(hour);
+    if (initialHour !== null) {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDate(currentDate);
+      let day = currentDate.toISOString();
+      let dates = day.slice(0, 10);
+      let hour = currentDate.toLocaleTimeString();
+      let dia = currentDate.getDay();
+      if (diaDisponible == DIAS[dia - 1]) {
+        setDay(dates);
+        if (initialHour <= hour && hour <= finalHour) {
+          setTime(hour);
+        } else {
+          Alert.alert('Coloca el la hora disponible del mentor');
+        }
       } else {
-        Alert.alert('Coloca el la hora disponible del mentor');
+        Alert.alert('Coloca el dia disponible del mentor que seleccionaste');
       }
-    } else {
-      Alert.alert('Coloca el dia disponible del mentor que seleccionaste');
+    }else{
+
     }
   };
 
@@ -207,7 +219,8 @@ const RequestMentory = ({ navigation }) => {
         datas,
         options
       );
-      Alert.alert("Mentoria Agendada",
+      Alert.alert(
+        'Mentoria Agendada',
         'Se ha agendado su mentoria de ' +
           title +
           ' el dia ' +
@@ -221,7 +234,12 @@ const RequestMentory = ({ navigation }) => {
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
       console.log(errorObject.data.error);
-      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:"Selecciona bien los datos");
+      Alert.alert(
+        'Error',
+        errorObject.data.error !== undefined
+          ? errorObject.data.error
+          : 'Selecciona bien los datos'
+      );
     }
   };
 
@@ -239,72 +257,73 @@ const RequestMentory = ({ navigation }) => {
       <View paddingVertical={5} />
       <Text>Selecciona el tipo de mentoria</Text>
       <View style={styles.borderInput}>
-      <RNPickerSelect //mentoring
-        onValueChange={(value) => {
-          getMentor(value);
-        }}
-        items={items}
-        placeholder={{}}
-        // useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+        <RNPickerSelect //mentoring
+          onValueChange={(value) => {
+            getMentor(value);
+          }}
+          items={items}
+          placeholder={{}}
+          // useNativeAndroidPickerStyle={false}
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+          }}
+        />
       </View>
       <View paddingVertical={5} />
       <Text>Selecciona al mentor</Text>
       <View style={styles.borderInput}>
-      <RNPickerSelect //Mentor
-        onValueChange={(value) => {
-          getAvailability(value);
-        }}
-        items={mentores}
-        placeholder={{}}
-        // useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+        <RNPickerSelect //Mentor
+          onValueChange={(value) => {
+            getAvailability(value);
+          }}
+          items={mentores}
+          placeholder={{}}
+          // useNativeAndroidPickerStyle={false}
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+          }}
+        />
       </View>
       <View paddingVertical={5} />
       <Text>Selecciona el horario y el dia</Text>
       <View style={styles.borderInput}>
-      <RNPickerSelect //availability
-        onValueChange={(value) => {
-          getHours(value);
-          setDiaDisponible(value);
-        }}
-        items={availability}
-        placeholder={{}}
-        // useNativeAndroidPickerStyle={false}
-        style={{
-          ...pickerSelectStyles,
-          iconContainer: {
-            top: 10,
-            right: 12,
-          },
-        }}
-        Icon={() => {
-          return <Ionicons name='md-arrow-down' size={24} color='gray' />;
-        }}
-      />
+        <RNPickerSelect //availability
+          onValueChange={(value) => {
+            getHours(value);
+            setDiaDisponible(value);
+          }}
+          items={availability}
+          // placeholder={{}}
+          // useNativeAndroidPickerStyle={false}
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          Icon={() => {
+            return <Ionicons name='md-arrow-down' size={24} color='gray' />;
+          }}
+        />
       </View>
       <View style={{ marginTop: 12 }}>
         <Button
+          disabled={initialHour !== null?false:true}
           onPress={showDatepicker}
           title='Selecciona el Dia'
           color='#00b7b8'
@@ -313,6 +332,7 @@ const RequestMentory = ({ navigation }) => {
       </View>
       <View style={{ marginTop: 12 }}>
         <Button
+          disabled={initialHour !== null?false:true}
           onPress={showTimepicker}
           title='Selecciona la hora'
           color='#00b7b8'
