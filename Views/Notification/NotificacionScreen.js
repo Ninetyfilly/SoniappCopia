@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MentorScreen from './NotificacionMentor';
 import PadawanScreen from './NotificacionPadawan';
 
-const ProfileScreen = ({ navigation }) => {
+const Notification = ({ navigation }) => {
   const [user, setUser] = React.useState('');
 
   const getUser = async () => {
@@ -48,3 +48,5 @@ const ProfileScreen = ({ navigation }) => {
 
   return LoadScreen();
 };
+
+export default Notification;
