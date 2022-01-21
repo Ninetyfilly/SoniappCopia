@@ -178,12 +178,12 @@ const RequestMentory = ({ navigation }) => {
 
   const getMentoringId = async (id) => {
     const { data } = await axios.get(
-      `${GLOBALS.API}events/mentoringtype/id/${id}`
+      `${GLOBALS.API}events/mentoring-type/${id}`
     );
     setTemporalMentoring(data.name);
   };
   const getMentorId = async (id) => {
-    const { data } = await axios.get(`${GLOBALS.API}users/mentor/id/${id}`);
+    const { data } = await axios.get(`${GLOBALS.API}users/mentor/${id}`);
     setTemporalMentor(data.name);
   };
 

@@ -30,7 +30,6 @@ const ProfileScreen = ({ navigation }) => {
       // Do something
       LoadScreen();
       setUser('');
-      console.log("Se cargo la pantalla de: ",user)
     });
     return unsubscribe;
   }, [navigation,user]);
@@ -49,30 +48,3 @@ const ProfileScreen = ({ navigation }) => {
 
   return LoadScreen();
 };
-
-export default ProfileScreen;
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 32,
-  },
-  state: {
-    fontSize: 20,
-    alignSelf: 'flex-end',
-  },
-});

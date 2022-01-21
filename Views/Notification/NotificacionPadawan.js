@@ -42,7 +42,7 @@ const PadawanScreen = () => {
     };
     try {
       const { data } = await axios.get(
-        `${GLOBALS.API}events/event/padawan/assistance/`,
+        `${GLOBALS.API}events/assigned-padawan/`,
         options
       );
       const dataFormateados = data.events.map((item) => {
@@ -86,7 +86,7 @@ const PadawanScreen = () => {
     };
     try {
       const { data } = await axios.put(
-        `${GLOBALS.API}events/event/padawan/confirm/${id}/`,
+        `${GLOBALS.API}events/padawan-confirm/${id}/`,
         { response },
         options
       );

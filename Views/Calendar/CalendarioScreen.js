@@ -28,7 +28,7 @@ const CalendarioScreen = () => {
     const getEventos = async () => {
       const userToken = await AsyncStorage.getItem('userToken');
       try {
-        await fetch(`${GLOBALS.API}events/event/`)
+        await fetch(`${GLOBALS.API}events/list/`)
           .then((response) => response.json())
           .then((responseJson) => {
             setEvento({ eventos: responseJson.eventos });

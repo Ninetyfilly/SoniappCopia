@@ -44,7 +44,7 @@ const MentorScreen = () => {
     };
     try {
       const { data } = await axios.get(
-        `${GLOBALS.API}events/mentoring/retrieve/`,
+        `${GLOBALS.API}events/mentoring/teach/`,
         options
       );
       const dataFormateados = data.mentorships.map((item) => {
