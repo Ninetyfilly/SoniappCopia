@@ -53,7 +53,7 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Por favor, ingresa tu Contraseña');
     } else {
       try {
-        const { data } = await axios.post(`${GLOBALS.API}users/login/`, {
+        const { data } = await axios.post(`${GLOBALS.API}login/`, {
           email: user,
           password,
           'token-expo': tokenP,

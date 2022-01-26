@@ -40,7 +40,7 @@ const RegisterScreen = ({ navigation }) => {
     } else {
       try {
         const { data } = await axios.post(
-          `${GLOBALS.API}users/password-reset/`,
+          `${GLOBALS.API}password-reset/`,
           {
             email: correo
           }

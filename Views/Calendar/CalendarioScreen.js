@@ -5,8 +5,9 @@ import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const moment = require('moment');
 import GLOBALS from '../../Utils/Global';
+import axios from 'axios';
 
-const CalendarioScreen = () => {
+const CalendarioScreen = ({navigation}) => {
   const _format = 'YYYY-MM-DD';
   const _today = moment().format(_format);
   const _maxDate = moment().add(30, 'days').format(_format);
@@ -24,27 +25,33 @@ const CalendarioScreen = () => {
   const [evento, setEvento] = useState({ eventos: [] });
   const [ready, setReady] = useState(false);
 
-  useEffect(() => {
-    const getEventos = async () => {
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Screen was focused
+      // Do something
+      getEventos();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const getEventos = async () => {
       const userToken = await AsyncStorage.getItem('userToken');
       try {
-        await fetch(`${GLOBALS.API}events/list/`)
-          .then((response) => response.json())
-          .then((responseJson) => {
-            setEvento({ eventos: responseJson.eventos });
-            //console.log(JSON.stringify(evento));
-            const fechas = responseJson.eventos;
-          });
+        const { data } = await axios.get(`${GLOBALS.API}events/list/`);
+        setEvento({ eventos: data.eventos });
+        console.log(data)
       } catch (error) {
         Alert.alert('Error:', error.message);
       }
     };
-    setReady(true);
-    return getEventos;
-  }, []);
+
 
   const loadItems = (day) => {
     for (let i = 0; i < 30; i++) {
+      var temporalDate = toString(evento.eventos.date)
+      if(temporalDate > "2022-01-01")console.log("fecha mayor a enero")
+      else console.log("fecha menor a enero")
       const strTime = moment().add(i, 'days').format(_format);
       const find = evento.eventos.filter((element) => element.date === strTime);
       const titulo = evento.eventos
@@ -120,7 +127,6 @@ const CalendarioScreen = () => {
       </View>
     );
   };
-  if (ready) {
     return (
       <View style={styles.view}>
         <View style={{ flexDirection: 'row' }}>
@@ -147,15 +153,6 @@ const CalendarioScreen = () => {
         />
       </View>
     );
-  }
-
-  return (
-    <View>
-      <Text style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        Cargando
-      </Text>
-    </View>
-  );
 };
 
 export default CalendarioScreen;

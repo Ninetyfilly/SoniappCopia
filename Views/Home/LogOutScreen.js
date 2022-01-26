@@ -21,7 +21,7 @@ const AuthLoadingScreen = ({ navigation }) => {
     console.log(userToken)
     if (userToken !== null) {
       try {
-        const { data } = await axios.get(`${GLOBALS.API}users/logout/?token=${userToken}`, {
+        const { data } = await axios.get(`${GLOBALS.API}logout/?token=${userToken}`, {
           token: userToken,
         });
         console.log(data);

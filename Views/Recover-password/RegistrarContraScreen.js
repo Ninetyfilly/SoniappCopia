@@ -98,7 +98,7 @@ const RegisterScreen = ({ navigation }) => {
     } else {
       try {
         const { data } = await axios.patch(
-          `${GLOBALS.API}users/password-update/`,
+          `${GLOBALS.API}password-update/`,
           {
             uidb64,
             token,

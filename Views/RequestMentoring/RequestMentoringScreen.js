@@ -73,7 +73,12 @@ const RequestMentory = ({ navigation }) => {
     const mentors = mentory.mentors.map((item) => {
       return { label: item.name, value: item.id };
     });
-    setMentores(mentors);
+    const itemMentors = { label: 'Sin Mentores', value: null };
+    if (mentors[0] !== undefined) {
+      setMentores(mentors);
+    } else {
+      setMentores(itemMentors);
+    }
   };
 
   const getAvailability = (id) => {
@@ -83,42 +88,34 @@ const RequestMentory = ({ navigation }) => {
     const mentors = mentory.mentors.find((item) => {
       return item.id == id;
     });
-    setMentorSelected(mentors.name);
-    setMentorId(mentors.id);
-    const disponibilidad = mentors.availability.map((item) => {
-      return {
-        label:
-          item.day +
-          ' Hora Inicial: ' +
-          item.start_hour +
-          ' Hora final: ' +
-          item.final_hour,
-        value: item.day,
-      };
-    });
-    const itemDisponibilidad = { label: 'Sin disponibilidad', value: null };
-    if (disponibilidad[0] !== undefined) {
-      setAvailability(disponibilidad);
-    } else {
-      setAvailability(itemDisponibilidad);
+    console.log(mentors);
+    if (mentors !== undefined) {
+      setMentorSelected(mentors.name);
+      setMentorId(mentors.id);
+      const disponibilidad = mentors.availability.map((item) => {
+        return {
+          label:
+            item.day +
+            ' Hora Inicial: ' +
+            item.start_hour +
+            ' Hora final: ' +
+            item.final_hour,
+          value: item.day,
+        };
+      });
+      const itemDisponibilidad = { label: 'Sin disponibilidad', value: null };
+      if (disponibilidad[0] !== undefined) {
+        setAvailability(disponibilidad);
+      } else {
+        setAvailability(itemDisponibilidad);
+      }
     }
   };
 
   const filterType = () => {
-    const newTypes = [];
-    for (
-      let index = 1;
-      index <= mentoringTypes.mentoring_types.length;
-      index++
-    ) {
-      const typeMentoring = mentoringTypes.mentoring_types.find(
-        (item) => item.id == index
-      );
-      newTypes[index - 1] = {
-        label: typeMentoring.name,
-        value: typeMentoring.id,
-      };
-    }
+    const newTypes = mentoringTypes.mentoring_types.map((item) => {
+      return { label: item.name, value: item.id };
+    });
     setItems(newTypes);
   };
 
@@ -133,8 +130,8 @@ const RequestMentory = ({ navigation }) => {
   ];
 
   const getHours = (day) => {
-    console.log(day)
-    if (day !== null) {
+    console.log(mentorSelected);
+    if (day !== null && mentorSelected !== undefined) {
       const mentory = mentoringTypes.mentoring_types.find(
         (item) => item.name == later
       );
@@ -169,8 +166,7 @@ const RequestMentory = ({ navigation }) => {
       } else {
         Alert.alert('Coloca el dia disponible del mentor que seleccionaste');
       }
-    }else{
-
+    } else {
     }
   };
 
@@ -195,10 +191,9 @@ const RequestMentory = ({ navigation }) => {
   };
 
   const loadData = async () => {
+    setLoading(true);
     const options = {
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
         Authorization: `Token ${token}`,
       },
     };
@@ -210,12 +205,14 @@ const RequestMentory = ({ navigation }) => {
         time,
         title,
         duration: '01:00:00',
+        type: 'mentoria',
       },
       observation: description,
     };
+
     try {
       const { data } = await axios.post(
-        `${GLOBALS.API}events/mentoring/`,
+        `${GLOBALS.API}events/mentoring/create/`,
         datas,
         options
       );
@@ -230,6 +227,10 @@ const RequestMentory = ({ navigation }) => {
           ' horas,\n con el mentor ' +
           mentorSelected
       );
+      setTitle('');
+      setDescription('');
+
+      setLoading(false);
     } catch (error) {
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
@@ -240,6 +241,8 @@ const RequestMentory = ({ navigation }) => {
           ? errorObject.data.error
           : 'Selecciona bien los datos'
       );
+      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -323,7 +326,7 @@ const RequestMentory = ({ navigation }) => {
       </View>
       <View style={{ marginTop: 12 }}>
         <Button
-          disabled={initialHour !== null?false:true}
+          disabled={initialHour !== null ? false : true}
           onPress={showDatepicker}
           title='Selecciona el Dia'
           color='#00b7b8'
@@ -332,7 +335,7 @@ const RequestMentory = ({ navigation }) => {
       </View>
       <View style={{ marginTop: 12 }}>
         <Button
-          disabled={initialHour !== null?false:true}
+          disabled={initialHour !== null ? false : true}
           onPress={showTimepicker}
           title='Selecciona la hora'
           color='#00b7b8'
