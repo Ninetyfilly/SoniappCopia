@@ -7,7 +7,7 @@ const moment = require('moment');
 import GLOBALS from '../../Utils/Global';
 import axios from 'axios';
 
-const CalendarioScreen = ({navigation}) => {
+const CalendarioScreen = ({ navigation }) => {
   const _format = 'YYYY-MM-DD';
   const _today = moment().format(_format);
   const _maxDate = moment().add(30, 'days').format(_format);
@@ -25,7 +25,6 @@ const CalendarioScreen = ({navigation}) => {
   const [evento, setEvento] = useState({ eventos: [] });
   const [ready, setReady] = useState(false);
 
-
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // Screen was focused
@@ -36,42 +35,47 @@ const CalendarioScreen = ({navigation}) => {
   }, [navigation]);
 
   const getEventos = async () => {
-      const userToken = await AsyncStorage.getItem('userToken');
-      try {
-        const { data } = await axios.get(`${GLOBALS.API}events/list/`);
-        setEvento({ eventos: data.eventos });
-        console.log(data)
-      } catch (error) {
-        Alert.alert('Error:', error.message);
-      }
-    };
-
+    const userToken = await AsyncStorage.getItem('userToken');
+    try {
+      const { data } = await axios.get(`${GLOBALS.API}events/list/`);
+      setEvento({ eventos: data.eventos });
+      console.log(data);
+    } catch (error) {
+      Alert.alert('Error:', error.message);
+    }
+  };
 
   const loadItems = (day) => {
     for (let i = 0; i < 30; i++) {
-      var temporalDate = toString(evento.eventos.date)
-      if(temporalDate > "2022-01-01")console.log("fecha mayor a enero")
-      else console.log("fecha menor a enero")
       const strTime = moment().add(i, 'days').format(_format);
       const find = evento.eventos.filter((element) => element.date === strTime);
-      const titulo = evento.eventos
-        .filter((item) => item.date === strTime)
-        .map((item) => item.title);
       const type = evento.eventos
         .filter((item) => item.date === strTime)
         .map((item) => item.type);
       const date = evento.eventos.filter((item) => item.date === strTime);
-      let index = date.map((item) => item.date).indexOf(strTime);
-      if (index !== -1) {
+      let indexo = date.map((item) => item.date).indexOf(strTime);
+      if (indexo !== -1) {
         item[strTime] = [];
         let suceso = type.toString();
-        let letras =
-          suceso == 'mentoria' ? 'M' : suceso == 'revision' ? 'R' : 'S';
-        item[strTime].push({
-          name: `${titulo.toString()}\n`, //ya sea su nombre, letra o lo que se requiera
-          height: Math.max(50, Math.floor(Math.random() * 150)),
-          label: letras,
+        const r = find.map((item) => {
+          return {
+            name: `${item.title.toString()}`, //ya sea su nombre, letra o lo que se requiera
+            label: item.type,
+            date: item.date,
+            time: item.time,
+          };
         });
+        for (let index = 0; index < r.length; index++) {
+          let letras =
+            r[index].label == 'mentoria' ? 'M' : r[index].label == 'revision' ? 'R' : 'S';
+          item[strTime].push({
+            name: r[index].name, //ya sea su nombre, letra o lo que se requiera
+            // height: Math.max(50, Math.floor(Math.random() * 150)),
+            label: letras,
+            date: r[index].date,
+            time: r[index].time,
+          });
+        }
         const _selectedDay = strTime.toString();
         let tipo =
           suceso == 'mentoria'
@@ -96,7 +100,7 @@ const CalendarioScreen = ({navigation}) => {
       <TouchableOpacity
         style={styles.item}
         onPress={() => {
-          Alert.alert(item.name, _today);
+          Alert.alert(item.name, item.date);
         }}
       >
         <Card>
@@ -127,32 +131,32 @@ const CalendarioScreen = ({navigation}) => {
       </View>
     );
   };
-    return (
-      <View style={styles.view}>
-        <View style={{ flexDirection: 'row' }}>
-          <Button icon='circle' color='red'>
-            Mentoria
-          </Button>
-          <Button icon='circle' color='black'>
-            Revision
-          </Button>
-          <Button icon='circle' color='green'>
-            Sesion
-          </Button>
-        </View>
-        <Agenda
-          items={item} //aqui se asignan los items
-          loadItemsForMonth={loadItems} //aqui se generan los datos de los items
-          //selected={fechaActual}//Fecha seleccionada por defecto
-          renderItem={renderItem} //aqui se renderizan los items que pertenecen al dia a dia
-          minDate={_today} //Aqui se declara el dia minimo para ser seleccionado
-          maxDate={_maxDate}
-          renderEmptyDate={renderEmptyDate}
-          markingType={'multi-dot'}
-          //markedDates={marcas}
-        />
+  return (
+    <View style={styles.view}>
+      <View style={{ flexDirection: 'row' }}>
+        <Button icon='circle' color='red'>
+          Mentoria
+        </Button>
+        <Button icon='circle' color='black'>
+          Revision
+        </Button>
+        <Button icon='circle' color='green'>
+          Sesion
+        </Button>
       </View>
-    );
+      <Agenda
+        items={item} //aqui se asignan los items
+        loadItemsForMonth={loadItems} //aqui se generan los datos de los items
+        selected={_today}//Fecha seleccionada por defecto
+        renderItem={renderItem} //aqui se renderizan los items que pertenecen al dia a dia
+        minDate={_today} //Aqui se declara el dia minimo para ser seleccionado
+        maxDate={_maxDate}
+        renderEmptyDate={renderEmptyDate}
+        markingType={'multi-dot'}
+        markedDates={marcas}
+      />
+    </View>
+  );
 };
 
 export default CalendarioScreen;
@@ -164,6 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
+    marginTop: 10,
   },
   emptyDate: {
     height: 15,
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop:35
+    marginTop: 35,
   },
   mentoria: {
     backgroundColor: 'red',
