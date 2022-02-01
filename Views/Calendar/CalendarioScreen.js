@@ -1,11 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
-import { Agenda } from 'react-native-calendars';
+import { Agenda,LocaleConfig } from 'react-native-calendars';
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const moment = require('moment');
 import GLOBALS from '../../Utils/Global';
 import axios from 'axios';
+
+LocaleConfig.locales['fr'] = {
+  monthNames: [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre'
+  ],
+  monthNamesShort: ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'],
+  dayNames: ['domingo', 'lunnes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+  dayNamesShort: ['dom.', 'lun.', 'mar.', 'miér.', 'jue.', 'vie.', 'sáb.'],
+  today: "Hoy"
+};
+LocaleConfig.defaultLocale = 'fr';
 
 const CalendarioScreen = ({ navigation }) => {
   const _format = 'YYYY-MM-DD';
@@ -74,7 +96,6 @@ const CalendarioScreen = ({ navigation }) => {
               : 'S';
           item[strTime].push({
             name: r[index].name, //ya sea su nombre, letra o lo que se requiera
-            // height: Math.max(50, Math.floor(Math.random() * 150)),
             label: letras,
             date: r[index].date,
             time: r[index].time,
@@ -129,13 +150,13 @@ const CalendarioScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.item}
         onPress={() => {
-          Alert.alert(item.name, item.date);
+          Alert.alert(item.name, item.date+'\n'+item.time );
         }}
       >
         <Card>
           <Card.Content>
             <View style={styles.agendado}>
-              <Paragraph>{item.name}</Paragraph>
+              <Paragraph style={{fontSize: 21}}>{item.name}</Paragraph>
               <Avatar.Text
                 label={item.label}
                 style={
@@ -165,13 +186,13 @@ const CalendarioScreen = ({ navigation }) => {
   return (
     <View style={styles.view}>
       <View style={{ flexDirection: 'row' }}>
-        <Button icon='circle' color='red'>
+        <Button icon='circle' color='#cf3232'>
           Mentoria
         </Button>
         <Button icon='circle' color='black'>
           Revision
         </Button>
-        <Button icon='circle' color='green'>
+        <Button icon='circle' color='#c4d043'>
           Sesion
         </Button>
       </View>
@@ -217,13 +238,13 @@ const styles = StyleSheet.create({
     marginTop: 35,
   },
   mentoria: {
-    backgroundColor: 'red',
+    backgroundColor: '#cf3232',
   },
   revision: {
     backgroundColor: 'black',
   },
   sesion: {
-    backgroundColor: 'green',
+    backgroundColor: '#c4d043',
   },
   emptyDate: {
     height: 15,
