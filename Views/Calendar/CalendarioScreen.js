@@ -39,13 +39,13 @@ const CalendarioScreen = ({ navigation }) => {
     try {
       const { data } = await axios.get(`${GLOBALS.API}events/list/`);
       setEvento({ eventos: data.eventos });
-      console.log(data);
     } catch (error) {
       Alert.alert('Error:', error.message);
     }
   };
 
   const loadItems = (day) => {
+    var temporalDots= [];
     for (let i = 0; i < 30; i++) {
       const strTime = moment().add(i, 'days').format(_format);
       const find = evento.eventos.filter((element) => element.date === strTime);
@@ -67,7 +67,11 @@ const CalendarioScreen = ({ navigation }) => {
         });
         for (let index = 0; index < r.length; index++) {
           let letras =
-            r[index].label == 'mentoria' ? 'M' : r[index].label == 'revision' ? 'R' : 'S';
+            r[index].label == 'mentoria'
+              ? 'M'
+              : r[index].label == 'revision'
+              ? 'R'
+              : 'S';
           item[strTime].push({
             name: r[index].name, //ya sea su nombre, letra o lo que se requiera
             // height: Math.max(50, Math.floor(Math.random() * 150)),
@@ -83,18 +87,43 @@ const CalendarioScreen = ({ navigation }) => {
             : suceso == 'revision'
             ? revision
             : sesion;
-        const markedDates = { [_selectedDay]: { dots: tipo } };
-        setMarcas({ dias: { ...marcas.dias, ...markedDates } });
+        // var temporal2 = { [_selectedDay]: { dots: [tipo] } }
+        temporalDots[i] =[{ [_selectedDay]: { dots: [tipo] } }]
+
+        // const markedDates = { [_selectedDay]: { dots: [tipo] } };
+        // console.log('Dots: ', markedDates);
+        // setMarcas( [_selectedDay]: { dots: [tipo] } );
+
       } else {
         item[strTime] = [];
       }
     }
+    var temporal2 = temporalDots.flatMap(x => x == undefined ? {} : x);
+    // const obj = Object.assign({}, temporal2);
+    // console.log(temporal2)
+    // as(temporal2)
     const newItems = {};
     Object.keys(item).forEach((key) => {
       newItems[key] = item[key];
     });
     setItems(newItems);
   };
+
+  // const as = (tempo)=>{
+    // console.log(tempo)
+    // var obj = {}
+    // if(tempo[0] !== undefined){
+    //   obj = Object.assign(tempo);
+      // obj = Object.assign(tempo[1]);
+    // }
+    // console.log(obj)
+    // for (let index = 0; index < tempo.length; index++) {
+    //   obj = Object.assign(tempo[index]);
+    //   console.log("Objeto: ",obj)
+    // }
+    // console.log("objeto encadenado: ", obj)
+  // }
+
   const renderItem = (item) => {
     return (
       <TouchableOpacity
@@ -131,6 +160,8 @@ const CalendarioScreen = ({ navigation }) => {
       </View>
     );
   };
+
+  // console.log(marcas);
   return (
     <View style={styles.view}>
       <View style={{ flexDirection: 'row' }}>
@@ -147,13 +178,13 @@ const CalendarioScreen = ({ navigation }) => {
       <Agenda
         items={item} //aqui se asignan los items
         loadItemsForMonth={loadItems} //aqui se generan los datos de los items
-        selected={_today}//Fecha seleccionada por defecto
+        selected={_today} //Fecha seleccionada por defecto
         renderItem={renderItem} //aqui se renderizan los items que pertenecen al dia a dia
         minDate={_today} //Aqui se declara el dia minimo para ser seleccionado
         maxDate={_maxDate}
         renderEmptyDate={renderEmptyDate}
-        markingType={'multi-dot'}
-        markedDates={marcas}
+        // markingType={'multi-dot'}
+        // markedDates={marcas}
       />
     </View>
   );
