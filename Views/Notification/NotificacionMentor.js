@@ -66,18 +66,22 @@ const MentorScreen = () => {
     }
   };
 
-  const Item = ({ item, onPress, backgroundColor, textColor }) => {
+ const Item = ({ item, onPress, backgroundColor, textColor }) => {
     return (
       <TouchableOpacity
         onPress={onPress}
         style={[styles.item, backgroundColor]}
       >
         <Text style={[styles.state, textColor]}>{item.status}</Text>
-        <Text style={[styles.title, textColor]}>{item.title}</Text>
-        <Text style={[styles.title, textColor]}>Dia: {item.date}</Text>
-        <Text style={[styles.title, textColor]}>Hora {item.time}</Text>
-        <Text style={[styles.title, textColor]}>
-          Observacion: {item.observation}
+        <Text style={[styles.title]}>{item.title}</Text>
+        <Text style={[styles.title]}>
+          Dia: <Text style={styles.subTitle}>{item.date}</Text>
+        </Text>
+        <Text style={[styles.title]}>
+          Hora: <Text style={styles.subTitle}>{item.time}</Text>
+        </Text>
+        <Text style={[styles.title]}>
+          Observacion: <Text style={styles.subTitle}>{item.observation}</Text>
         </Text>
       </TouchableOpacity>
     );
@@ -113,7 +117,7 @@ const MentorScreen = () => {
     }
   };
 
-  const backgroundColorChange = (status) =>{
+  const textColorStatusChange = (status) =>{
     if(status === 'solicitada'){
       return 'grey';
     }else if(status === 'confirmada'){
@@ -126,8 +130,7 @@ const MentorScreen = () => {
   }
 
   const renderItem = ({ item }) => {
-    const backgroundColor = backgroundColorChange(item.status);
-    const color = item.status === 'solicitada'? 'black' : 'white';
+    const color = textColorStatusChange(item.status);
     if (item.status == 'solicitada') {
       return (
         <Item
@@ -144,12 +147,12 @@ const MentorScreen = () => {
                 },
                 {
                   text: 'Aceptar',
-                  onPress: () => mentoringResponse("confirmada",item.id),
+                  onPress: () => mentoringResponse('confirmada', item.id),
                   style: 'cancel',
                 },
                 {
                   text: 'Rechazar',
-                  onPress: () => mentoringResponse("rechazada",item.id),
+                  onPress: () => mentoringResponse('rechazada', item.id),
                   style: 'cancel',
                 },
               ],
@@ -158,18 +161,11 @@ const MentorScreen = () => {
               }
             ); //urilizar Modals
           }}
-          backgroundColor={{ backgroundColor }}
           textColor={{ color }}
         />
       );
-    }else{
-      return (
-        <Item
-          item={item}
-          textColor={{ color }}
-          backgroundColor={{ backgroundColor }}
-        />
-      );
+    } else {
+      return <Item item={item} textColor={{ color }} />;
     }
   };
 
@@ -205,9 +201,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     borderRadius: 10,
+    borderWidth: 1,
   },
   title: {
-    fontSize: 32,
+    fontSize: 35,
+    fontWeight: 'bold',
+  },
+  subTitle: {
+    fontSize: 25,
   },
   state: {
     fontSize: 20,
