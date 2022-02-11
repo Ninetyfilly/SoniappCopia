@@ -34,6 +34,7 @@
     },
     "android": {
       "package": "com.hackademy.soniapp",
+      "versionCode": 1.01,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
