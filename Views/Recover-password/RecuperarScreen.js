@@ -20,8 +20,9 @@ const RegisterScreen = ({ navigation }) => {
     uri: 'https://startupeable.com/directorio/wp-content/uploads/listing-uploads/logo/2021/05/512-1.png',
   };
 
- const verificate = async ({token, uidb64, code}) => {
+ const verificate = async (token, uidb64, code) => {
     try {
+      console.log(token)
       await AsyncStorage.setItem('resetToken', token);
       await AsyncStorage.setItem('uidb64', uidb64);
       await AsyncStorage.setItem('code', `${code}`);
@@ -45,9 +46,9 @@ const RegisterScreen = ({ navigation }) => {
             email: correo
           }
         );
-        console.log(data);
+        console.log(data.hecho.code);
         setLoading(false)
-        verificate(data);
+        verificate(data.hecho.token,data.hecho.uidb64,data.hecho.code);
       } catch (error) {
         setLoading(false)
         Alert.alert("Ha ocurrio un error")

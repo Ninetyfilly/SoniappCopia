@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import imageSoni from '../../assets/SONIAPP.png';
 
 const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = React.useState(false);

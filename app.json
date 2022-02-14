@@ -1,17 +1,5 @@
 {
   "expo": {
-    "plugins": [
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#ffffff",
-          "sounds": [
-            "./assets/notification-sound.wav"
-          ]
-        }
-      ]
-    ],
     "scheme": "soniapp",
     "name": "SoniApp",
     "slug": "SoniApp",
@@ -34,9 +22,8 @@
     },
     "android": {
       "package": "com.hackademy.soniapp",
-      "versionCode": 1.01,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/notification-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "intentFilters": [
