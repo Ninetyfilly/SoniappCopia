@@ -204,13 +204,13 @@ const RequestMentory = ({ navigation }) => {
   };
 
   const DIAS = [
+    'Domingo',
     'Lunes',
     'Martes',
     'Miércoles',
     'Jueves',
     'Viernes',
     'Sábado',
-    'Domingo',
   ];
 
   const getHours = (day) => {
@@ -239,7 +239,7 @@ const RequestMentory = ({ navigation }) => {
     let dates = day.slice(0, 10);
     let hour = currentDate.toLocaleTimeString();
     let dia = currentDate.getDay();
-    if (diaDisponible == DIAS[dia - 1]) {
+    if (diaDisponible == DIAS[dia]) {
       setDay(dates);
       if (initialHour <= hour && hour <= finalHour) {
         setTime(hour);
