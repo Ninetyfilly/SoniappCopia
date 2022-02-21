@@ -67,7 +67,7 @@ const MainStack = () => {
   const MenuStackScreens = ({ navigation }) => {
   //para aplicar la hamburguesa checar react navigator drawer
   return (
-    <MenuStacks.Navigator initialRouteName='Home' activeColor='#000000'>
+    <MenuStacks.Navigator initialRouteName='Home' activeColor='#ffffff'>
       <MenuStacks.Screen
         name='Inicio'
         component={HamburguerStackScreens}

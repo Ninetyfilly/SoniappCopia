@@ -14,25 +14,28 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GLOBALS from '../../Utils/Global';
 
 const PadawanScreen = ({ navigation }) => {
-  const [userToken, setUserToken] = useState('');
+  const [userToken, setUserToken] = useState(null);
   const [events, setEvents] = useState('');
 
-  // useEffect(() => {
-  //   getEvents();
-  // }, [userToken]);
-
   useEffect(() => {
-    getToken();
-  }, []);
+    getEvents();
+  }, [userToken]);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // Screen was focused
       // Do something
-      getEvents();
+      if(userToken != null){
+        getEvents();
+        console.log("eventos")
+      }else{
+        getToken();
+        console.log("token")
+      }
+      getToken();
     });
     return unsubscribe;
-  }, [navigation,userToken]);
+  }, [navigation]);
 
   const getToken = async () => {
     try {
@@ -85,10 +88,18 @@ const PadawanScreen = ({ navigation }) => {
   const Item = ({ item, backgroundColor, textColor }) => (
     <View style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>{item.title}</Text>
-      <Text style={[styles.title, textColor]}>fecha: {item.date}</Text>
-      <Text style={[styles.title, textColor]}>time: {item.time}</Text>
-      <Text style={[styles.title, textColor]}>tipo de evento: {item.type}</Text>
-      <Text style={[styles.title, textColor]}>duracion: {item.duration}</Text>
+      <Text style={[styles.title, textColor]}>
+        fecha: <Text style={styles.subTitle}>{item.date}</Text>
+      </Text>
+      <Text style={[styles.title, textColor]}>
+        hora: <Text style={styles.subTitle}>{item.time}</Text>
+      </Text>
+      <Text style={[styles.title, textColor]}>
+        tipo de evento: <Text style={styles.subTitle}>{item.type}</Text>
+      </Text>
+      <Text style={[styles.title, textColor]}>
+        duracion: <Text style={styles.subTitle}>{item.duration}</Text>
+      </Text>
     </View>
   );
 
@@ -134,7 +145,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    fontSize: 32,
+    fontSize: 35,
+    fontWeight: 'bold',
+  },
+  subTitle: {
+    fontSize: 25,
   },
   state: {
     fontSize: 20,
