@@ -229,7 +229,6 @@ const RequestMentory = ({ navigation }) => {
       );
       setTitle('');
       setDescription('');
-
       setLoading(false);
     } catch (error) {
       const { response } = error;

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "102873316981",
+    "project_id": "soniapp-95d6a",
+    "storage_bucket": "soniapp-95d6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102873316981:android:cc76c5e8930f3b3792423c",
+        "android_client_info": {
+          "package_name": "com.hackademy.soniapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102873316981-ifmlhb5l4cbjvj05om578ds336570r7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg1j9YH1VGOQA4V8nVQKioeVd-29cjJWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102873316981-ifmlhb5l4cbjvj05om578ds336570r7d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
