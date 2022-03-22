@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   empty: {
-    alignItems: 'center',
+    alignSelf: 'center',
     fontSize: 25,
     fontWeight: 'bold',
   },

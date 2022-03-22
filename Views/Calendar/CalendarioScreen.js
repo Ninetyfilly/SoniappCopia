@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
-import { Agenda,LocaleConfig } from 'react-native-calendars';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Alert,
+  Modal,
+} from 'react-native';
+import { Agenda, LocaleConfig } from 'react-native-calendars';
 import { Card, Paragraph, Avatar, Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const moment = require('moment');
@@ -20,12 +27,33 @@ LocaleConfig.locales['fr'] = {
     'septiembre',
     'octubre',
     'noviembre',
-    'diciembre'
+    'diciembre',
   ],
-  monthNamesShort: ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'],
-  dayNames: ['domingo', 'lunnes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+  monthNamesShort: [
+    'ene.',
+    'feb.',
+    'mar.',
+    'abr.',
+    'may.',
+    'jun.',
+    'jul.',
+    'ago.',
+    'sep.',
+    'oct.',
+    'nov.',
+    'dic.',
+  ],
+  dayNames: [
+    'domingo',
+    'lunnes',
+    'martes',
+    'miércoles',
+    'jueves',
+    'viernes',
+    'sábado',
+  ],
   dayNamesShort: ['dom.', 'lun.', 'mar.', 'miér.', 'jue.', 'vie.', 'sáb.'],
-  today: "Hoy"
+  today: 'Hoy',
 };
 LocaleConfig.defaultLocale = 'fr';
 
@@ -47,6 +75,8 @@ const CalendarioScreen = ({ navigation }) => {
   const [evento, setEvento] = useState({ eventos: [] });
   const [ready, setReady] = useState(false);
 
+  const [view, setView] = useState(false);
+
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // Screen was focused
@@ -67,7 +97,7 @@ const CalendarioScreen = ({ navigation }) => {
   };
 
   const loadItems = (day) => {
-    var temporalDots= [];
+    var temporalDots = [];
     for (let i = 0; i < 30; i++) {
       const strTime = moment().add(i, 'days').format(_format);
       const find = evento.eventos.filter((element) => element.date === strTime);
@@ -99,6 +129,7 @@ const CalendarioScreen = ({ navigation }) => {
             label: letras,
             date: r[index].date,
             time: r[index].time,
+            type: r[index].label
           });
         }
         const _selectedDay = strTime.toString();
@@ -108,21 +139,11 @@ const CalendarioScreen = ({ navigation }) => {
             : suceso == 'revision'
             ? revision
             : sesion;
-        // var temporal2 = { [_selectedDay]: { dots: [tipo] } }
-        temporalDots[i] =[{ [_selectedDay]: { dots: [tipo] } }]
-
-        // const markedDates = { [_selectedDay]: { dots: [tipo] } };
-        // console.log('Dots: ', markedDates);
-        // setMarcas( [_selectedDay]: { dots: [tipo] } );
-
+        temporalDots[i] = [{ [_selectedDay]: { dots: [tipo] } }];
       } else {
         item[strTime] = [];
       }
     }
-    var temporal2 = temporalDots.flatMap(x => x == undefined ? {} : x);
-    // const obj = Object.assign({}, temporal2);
-    // console.log(temporal2)
-    // as(temporal2)
     const newItems = {};
     Object.keys(item).forEach((key) => {
       newItems[key] = item[key];
@@ -130,47 +151,57 @@ const CalendarioScreen = ({ navigation }) => {
     setItems(newItems);
   };
 
-  // const as = (tempo)=>{
-    // console.log(tempo)
-    // var obj = {}
-    // if(tempo[0] !== undefined){
-    //   obj = Object.assign(tempo);
-      // obj = Object.assign(tempo[1]);
-    // }
-    // console.log(obj)
-    // for (let index = 0; index < tempo.length; index++) {
-    //   obj = Object.assign(tempo[index]);
-    //   console.log("Objeto: ",obj)
-    // }
-    // console.log("objeto encadenado: ", obj)
-  // }
-
   const renderItem = (item) => {
+    let time = item.time;
+    let timeH = time.slice(0,5)
     return (
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => {
-          Alert.alert(item.name, item.date+'\n'+item.time );
-        }}
-      >
-        <Card>
-          <Card.Content>
-            <View style={styles.agendado}>
-              <Paragraph style={{fontSize: 21}}>{item.name}</Paragraph>
-              <Avatar.Text
-                label={item.label}
-                style={
-                  item.label == 'M'
-                    ? styles.mentoria
-                    : item.label == 'R'
-                    ? styles.revision
-                    : styles.sesion
-                }
-              />
+      <View>
+        <TouchableOpacity style={styles.item} onPress={() => setView(true)}>
+          <Card>
+            <Card.Content>
+              <View style={styles.agendado}>
+                <Paragraph style={{ fontSize: 21 }}>{item.name}</Paragraph>
+                <Avatar.Text
+                  label={item.label}
+                  style={
+                    item.label == 'M'
+                      ? styles.mentoria
+                      : item.label == 'R'
+                      ? styles.revision
+                      : styles.sesion
+                  }
+                />
+              </View>
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
+        <Modal
+          animationType='slide'
+          onDismiss={() => setView(false)}
+          onShow={() => console.log('show')}
+          transparent={true}
+          visible={view}
+        >
+          <View style={styles.modalGeneral}>
+            <View style={styles.modalBackground}>
+              <View style={styles.modalX}>
+                {/*X (cancel)*/}
+                <TouchableOpacity onPress={() => setView(false)}>
+                  <Button icon='window-close' color='black' />
+                </TouchableOpacity>
+              </View>
+                {/*Title*/}
+              <View>
+                  <Text style={styles.title}>{item.name}</Text>
+              </View>
+              {/*Datos*/}
+              <View>
+                  <Text style={styles.data}>la {item.type} se realizara a las {timeH}</Text>
+              </View>
             </View>
-          </Card.Content>
-        </Card>
-      </TouchableOpacity>
+          </View>
+        </Modal>
+      </View>
     );
   };
 
@@ -204,8 +235,6 @@ const CalendarioScreen = ({ navigation }) => {
         minDate={_today} //Aqui se declara el dia minimo para ser seleccionado
         maxDate={_maxDate}
         renderEmptyDate={renderEmptyDate}
-        // markingType={'multi-dot'}
-        // markedDates={marcas}
       />
     </View>
   );
@@ -214,6 +243,37 @@ const CalendarioScreen = ({ navigation }) => {
 export default CalendarioScreen;
 
 const styles = StyleSheet.create({
+  title:{
+    fontSize:35,
+    fontFamily: ('Poppins', 'sans-serif'),
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+  },
+  data:{
+    fontSize:25,
+    fontFamily: ('Poppins', 'sans-serif'),
+    paddingHorizontal: 10,
+  },
+  modalGeneral: {
+    flex: 1,
+    backgroundColor: 'rgba(1,1,1,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalBackground: {
+    height: '25%',
+    width: '85%',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+  },
+  modalX: {
+    height: 45,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    transform: [{ scale: 1.7 }, { translateX: -45 }],
+  },
   item: {
     backgroundColor: 'white',
     flex: 1,

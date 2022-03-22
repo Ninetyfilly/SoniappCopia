@@ -191,11 +191,11 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: 'white',
+    padding: 10,
   },
   soniapp: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
   },
   imageHackademy: {
     justifyContent: 'center',
@@ -203,15 +203,14 @@ const styles = StyleSheet.create({
     width: 250,
   },
   formContra: {
-    marginBottom: 20,
-    marginBottom: 50,
+    marginBottom: 10,
     width: 250,
-    transform: [{ translateX: 85 }],
+    transform: [{ translateX: 70 }],
   },
   formContraConfirm: {
-    marginBottom: 50,
+    marginBottom: 20,
     width: 250,
-    transform: [{ translateX: 85 }],
+    transform: [{ translateX: 70 }],
   },
   form2: {
     display: 'flex',
@@ -221,7 +220,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#c4d043',
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 10,
   },
   formPasswordTop: {
     marginRight: 73,

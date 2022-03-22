@@ -13,13 +13,11 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GLOBALS from '../../Utils/Global';
 
-
 const MentorScreen = () => {
   const [token, setToken] = React.useState('');
   const [events, setEvents] = React.useState('');
   const [changue, setChangue] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState(null);
-  
 
   React.useEffect(() => {
     getToken();
@@ -27,7 +25,7 @@ const MentorScreen = () => {
 
   React.useEffect(() => {
     getData();
-  }, [token,changue]);
+  }, [token, changue]);
 
   const getToken = async () => {
     try {
@@ -51,22 +49,21 @@ const MentorScreen = () => {
         let descripcion =
           item.observation !== null ? item.observation : 'Sin descripcion';
         return {
-            id: item.id,
-            title: item.event.title,
-            date: item.event.date,
-            time: item.event.time,
-            observation: descripcion,
-            status: item.status,
-          }
-        }
-      )
-      setEvents(dataFormateados)
+          id: item.id,
+          title: item.event.title,
+          date: item.event.date,
+          time: item.event.time,
+          observation: descripcion,
+          status: item.status,
+        };
+      });
+      setEvents(dataFormateados);
     } catch (error) {
       console.log(error);
     }
   };
 
- const Item = ({ item, onPress, backgroundColor, textColor }) => {
+  const Item = ({ item, onPress, backgroundColor, textColor }) => {
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -87,8 +84,8 @@ const MentorScreen = () => {
     );
   };
 
-  const mentoringResponse = async(response,id) => {
-    console.log(response)
+  const mentoringResponse = async (response, id) => {
+    console.log(response);
     const options = {
       headers: {
         Authorization: `Token ${token}`,
@@ -97,37 +94,43 @@ const MentorScreen = () => {
     try {
       const { data } = await axios.put(
         `${GLOBALS.API}events/mentoring/response/${id}/`,
-        {response},
+        { response },
         options
       );
-      Alert.alert("Mentoria "+response,
-        'La mentoria ha sido '+response+' correctamente'
+      Alert.alert(
+        'Mentoria ' + response,
+        'La mentoria ha sido ' + response + ' correctamente'
       );
-      if(!changue){
-        setChangue(true)
-      }else{
-        setChangue(false)
+      if (!changue) {
+        setChangue(true);
+      } else {
+        setChangue(false);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       const { response } = error;
       const { request, ...errorObject } = response; // take everything but 'request'
       console.log(errorObject.data.error);
-      Alert.alert("Error",errorObject.data.error !== undefined?errorObject.data.error:"Ha ocurrido un error");
+      Alert.alert(
+        'Error',
+        errorObject.data.error !== undefined
+          ? errorObject.data.error
+          : 'Ha ocurrido un error'
+      );
     }
   };
 
-  const textColorStatusChange = (status) =>{
-    if(status === 'solicitada'){
+  const textColorStatusChange = (status) => {
+    if (status === 'solicitada') {
       return 'grey';
-    }else if(status === 'confirmada'){
+    } else if (status === 'confirmada') {
       return '#00b7b8';
-    }else if(status === 'finalizada'){
+    } else if (status === 'finalizada') {
       return 'black';
-    }else{
+    } else {
       return '#cf3232';
     }
-  }
+  };
 
   const renderItem = ({ item }) => {
     const color = textColorStatusChange(item.status);
@@ -168,21 +171,31 @@ const MentorScreen = () => {
       return <Item item={item} textColor={{ color }} />;
     }
   };
-
-  return (
-    <View style={styles.view}>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={events}
-          renderItem={renderItem}
-          keyExtractor={(item) => `Notificacion-${item.id}`}
-          extraData={selectedId}
-          //   horizontal={true} //seutiliza para renderizar los elementos de forma horizontal
-        />
-      </SafeAreaView>
-    </View>
-  );
-};
+  const LoadScreen = () => {
+    if (events[0] !== undefined) {
+      return (
+        <View style={styles.view}>
+          <SafeAreaView style={styles.container}>
+            <FlatList
+              data={events}
+              renderItem={renderItem}
+              keyExtractor={(item) => `Notificacion-${item.id}`}
+              extraData={selectedId}
+              //   horizontal={true} //seutiliza para renderizar los elementos de forma horizontal
+            />
+          </SafeAreaView>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.view}>
+          <Text style={styles.empty}>No hay eventos por confirmar</Text>
+        </View>
+      );
+    }
+  };
+  return LoadScreen();
+}
 
 export default MentorScreen;
 const styles = StyleSheet.create({
@@ -213,6 +226,9 @@ const styles = StyleSheet.create({
   state: {
     fontSize: 20,
     alignSelf: 'flex-end',
-
+  },empty: {
+    alignSelf: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
   },
 });
